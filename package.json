@@ -1,0 +1,33 @@
+{
+  "name": "asyncapi-validator",
+  "version": "1.0.0",
+  "description": "message validator through asyncapi",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WaleedAshraf/asyncapi-validator.git"
+  },
+  "keywords": [
+    "asyncapi",
+    "kafka",
+    "rabbitmq",
+    "test",
+    "validator",
+    "api"
+  ],
+  "author": "Waleed Ashraf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WaleedAshraf/asyncapi-validator/issues"
+  },
+  "homepage": "https://github.com/WaleedAshraf/asyncapi-validator#readme",
+  "dependencies": {
+    "ajv": "^6.10.0",
+    "asyncapi": "^2.2.0",
+    "axios": "^0.19.0",
+    "yamljs": "^0.3.0"
+  }
+}
