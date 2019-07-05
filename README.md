@@ -6,22 +6,33 @@ message validator through asyncapi
 
 ```javascript
 let Validator = require('asyncapi-validator')
-let validator = await Validator.loadFromFile('./api.yaml')
-validator.validate('Key', {1:1})
+let va = await Validator.fromSource('./api.yaml')
+va.validate('Key', {1:1})
 ```
 
 Methods:
 ```javascript
-loadFromFile('./api.yaml')
-loadFromUrl('https://example.com/api.yml')
+/**
+ * @param {String} path - local path or URL of AsyncAPI schema
+ * @returns {Promise}
+ */
+fromSource(path)
+
+
+/**
+ * @param {String} key
+ * @param {Object} payload
+ */
+validate(ley, payload)
 ```
 
-Example:
+Examples:
 ```javascript
-v.validate('UserCreated',
-  {
-    userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
-    createdAt: 'bd58d14f-fd3e-449c-b60c-a56548190d69',
-  }
-)
+const AsyncApiValidator = require('./index.js')
+let va = await AsyncApiValidator.fromSource('./api.yaml')
+va.validate('UserDeleted', {
+  userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+  deletedBy: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+  deletedAt: '2017-01-09T08:27:22.222Z',
+})
 ```
