@@ -3,6 +3,10 @@
 const yaml = require('yamljs')
 
 class YamlParser {
+  /**
+   * @param {string} yamlString
+   * @returns {JSON}
+   */
   parse(yamlString) {
     return yaml.parse(yamlString)
   }
