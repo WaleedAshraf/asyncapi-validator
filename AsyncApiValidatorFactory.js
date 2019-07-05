@@ -1,6 +1,6 @@
 const path = require('path')
 const utils = require('./utils')
-const {fail} = require('assert')
+const asyncapi = require('asyncapi')
 
 // Validator
 const AsyncApiValidator = require('./AsyncApiValidator')
@@ -14,43 +14,72 @@ const jsonParser = require('./parsers/jsonParser')
 const yamlParser = require('./parsers/yamlParser')
 const byPassParser = require('./parsers/byPassParser')
 
-class AsyncApiValidatorFactory {
-  _getParserFromExtension(extension) {
-    if(utils.isJson(extension)) {
+// Resolver
+const Resolver = require('./Resolver')
+
+function AsyncApiValidatorFactory() {
+  /**
+   * @param {string} extension
+   * @returns {jsonParser | yamlParser | byPassParser}
+   */
+  this._getParserFromExtension = (extension) => {
+    if (utils.isJson(extension)) {
       return jsonParser
     }
 
-    if(utils.isYaml(extension)) {
+    if (utils.isYaml(extension)) {
       return yamlParser
     }
-    
+
     return byPassParser
   }
 
-  _getLoaderFromSource(source) {
+  /**
+   * @param {string} source
+   * @returns {HttpLoader | FsLoader}
+   */
+  this._getLoaderFromSource = (source) => {
     if (source.startsWith('http')) {
       return new HttpLoader(source)
     }
-    
+
     return new FsLoader(source)
   }
 
-  fromSource(source) {
-    const extension = path.extname(source)
-    const loader = this._getLoaderFromSource(source)
-    const parser = this._getParserFromExtension(extension)
-
-    return this.fromLoader(loader, parser)  
+  /**
+   * @param {string | number} verion
+   */
+  this._getAsyncApiSchema = (verion) => {
+    return asyncapi[verion]
   }
 
-  async fromLoader(
-    loader = fail('loader is mandatory'), 
-    parser = byPassParser
-  ) {
+  /**
+   * @param {any} refSchema
+   * @returns {Resolver}
+   */
+  this._getResolver = (refSchema) => {
+    return new Resolver(refSchema)
+  }
+
+  /**
+   * @param {string} source
+   * @returns {Promise<AsyncApiValidator>}
+   */
+  this.fromSource = async (source) => {
+    const extension = path.extname(source)
+    const parser = this._getParserFromExtension(extension)
+
+    const loader = this._getLoaderFromSource(source)
     const rawSchema = await loader.load()
+
     const schema = parser.parse(rawSchema)
 
-    return new AsyncApiValidator(schema)
+    const resolver = this._getResolver(schema)
+    const resolvedSchema = await resolver.resolve()
+
+    const asyncapi = this._getAsyncApiSchema(schema.asyncapi)
+
+    return new AsyncApiValidator(schema, asyncapi, resolvedSchema)
   }
 }
 
