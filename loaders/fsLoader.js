@@ -6,12 +6,18 @@ const util = require('util')
 const readFile = util.promisify(fs.readFile)
 
 class FsLoader {
+  /**
+   * @param {String} path
+   */
   constructor(path) {
     this._path = path || fail('path is mandatory')
   }
 
-  load() {
-    return readFile(this._path, 'utf8')
+  /**
+   * @returns {Promise}
+   */
+  async load() {
+    return await readFile(this._path, 'utf8')
   }
 }
 
