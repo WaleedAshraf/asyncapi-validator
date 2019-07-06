@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "extends": "standard",
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "space-before-function-paren": 0,
+    "curly": ["error", "multi"],
+    "object-curly-spacing": 0,
+    "no-return-await": 0
+  }
+}
