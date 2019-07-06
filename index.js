@@ -1,2 +1,2 @@
-const AsyncApiValidatorFactory = require('./AsyncApiValidatorFactory')
+const AsyncApiValidatorFactory = require('./src/AsyncApiValidatorFactory')
 module.exports = new AsyncApiValidatorFactory()

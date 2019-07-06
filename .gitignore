@@ -77,4 +77,4 @@ typings/
 api.json
 api.yaml
 dev.js
-.vscode/launch.json
+.vscode/
