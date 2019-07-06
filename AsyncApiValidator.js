@@ -1,9 +1,7 @@
 const {fail} = require('assert')
-const path = require('path')
 const Ajv = require('ajv')
 
 class AsyncApiValidator {
-
   /**
    * @param {any} schema
    * @param {any} asyncapi
@@ -25,9 +23,7 @@ class AsyncApiValidator {
       this.ajv = new Ajv({allErrors: true})
     const validator = this.ajv.compile(this.resolvedSchema.components.messages[key].payload)
     const result = validator(payload)
-    if (result) {
-      console.log('Valid!')
-    } else {
+    if (!result) {
       console.log('Invalid: ' + this.ajv.errorsText(validator.errors))
       throw new Error(this.ajv.errorsText(validator.errors))
     }
@@ -35,15 +31,14 @@ class AsyncApiValidator {
 
   validateSchema() {
     // validate user defined AsyncApi schema against AsyncApi schema defination
-    const ajv =  new Ajv({schemaId: 'auto', allErrors: true})
+    const ajv = new Ajv({schemaId: 'auto', allErrors: true})
+    // @ts-ignore
     ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'))
     const validate = ajv.compile(this._asyncapi)
     const valid = validate(this._schema)
     if (!valid) {
       console.log('Invalid: ' + ajv.errorsText(validate.errors))
       throw new Error(ajv.errorsText(validate.errors))
-    } else {
-      console.log('Valid!')
     }
   }
 }
