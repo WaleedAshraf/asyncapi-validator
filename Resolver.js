@@ -7,7 +7,7 @@ class Resolver {
    * @param {Object} schema
    */
   constructor(schema) {
-    this._refSchema= schema
+    this._refSchema = schema
     this._resolvedSchema = null
   }
 
