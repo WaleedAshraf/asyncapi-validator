@@ -1,3 +1,5 @@
+'use strict'
+
 const path = require('path')
 const utils = require('./utils')
 const asyncapi = require('asyncapi')
@@ -12,26 +14,23 @@ const FsLoader = require('./loaders/FsLoader')
 // Parsers
 const jsonParser = require('./parsers/jsonParser')
 const yamlParser = require('./parsers/yamlParser')
-const byPassParser = require('./parsers/byPassParser')
 
 // Resolver
 const Resolver = require('./Resolver')
 
 function AsyncApiValidatorFactory() {
+  this.asyncApiValidator = null
+  this.source = null
+
   /**
    * @param {string} extension
-   * @returns {jsonParser | yamlParser | byPassParser}
+   * @returns {jsonParser | yamlParser}
    */
   this._getParserFromExtension = (extension) => {
-    if (utils.isJson(extension)) {
+    if (utils.isJson(extension))
       return jsonParser
-    }
-
-    if (utils.isYaml(extension)) {
+    else if (utils.isYaml(extension))
       return yamlParser
-    }
-
-    return byPassParser
   }
 
   /**
@@ -39,9 +38,8 @@ function AsyncApiValidatorFactory() {
    * @returns {HttpLoader | FsLoader}
    */
   this._getLoaderFromSource = (source) => {
-    if (source.startsWith('http')) {
+    if (source.startsWith('http'))
       return new HttpLoader(source)
-    }
 
     return new FsLoader(source)
   }
@@ -54,7 +52,7 @@ function AsyncApiValidatorFactory() {
   }
 
   /**
-   * @param {any} refSchema
+   * @param {any} refSchema - JSON schema with refs
    * @returns {Resolver}
    */
   this._getResolver = (refSchema) => {
@@ -66,6 +64,9 @@ function AsyncApiValidatorFactory() {
    * @returns {Promise<AsyncApiValidator>}
    */
   this.fromSource = async (source) => {
+    if (this.asyncApiValidator && this.source === source)
+      return this.asyncApiValidator
+
     const extension = path.extname(source)
     const parser = this._getParserFromExtension(extension)
 
@@ -79,7 +80,11 @@ function AsyncApiValidatorFactory() {
 
     const asyncapi = this._getAsyncApiSchema(schema.asyncapi)
 
-    return new AsyncApiValidator(schema, asyncapi, resolvedSchema)
+    const instance = new AsyncApiValidator(schema, asyncapi, resolvedSchema)
+    instance.validateSchema()
+
+    this.asyncApiValidator = instance
+    return this.asyncApiValidator
   }
 }
 
