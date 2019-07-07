@@ -43,28 +43,28 @@ describe('factory', () => {
       beforeEach(async () => {
         validator = await AsyncApiValidator.fromSource(mocks.streetlights)
       })
-      it('should throw error - lumens should be integer', async () => {
+      it('should throw error - lumens should be integer', () => {
         const validate = () => validator.validate('lightMeasured', {
           lumens: 'asd'
         })
         expect(validate).toThrowError(new Error('data.lumens should be integer'))
       })
 
-      it('should throw error - sentAt should be date-time format', async () => {
+      it('should throw error - sentAt should be date-time format', () => {
         const validate = () => validator.validate('lightMeasured', {
           sentAt: 'asd'
         })
         expect(validate).toThrowError(new Error('data.sentAt should match format "date-time"'))
       })
 
-      it('should throw error - lumens should be integer', async () => {
+      it('should throw error - lumens should be integer', () => {
         const validate = () => validator.validate('lightMeasured', {
           lumens: 7.7
         })
         expect(validate).toThrowError(new Error('data.lumens should be integer'))
       })
 
-      it('should validate lightMeasured', async () => {
+      it('should validate lightMeasured', () => {
         const validate = validator.validate('lightMeasured', {
           lumens: 7,
           sentAt: '2019-07-07T15:17:47Z'
@@ -79,35 +79,35 @@ describe('factory', () => {
         validator = await AsyncApiValidator.fromSource(mocks.slack)
       })
 
-      it('should throw error - type should be string', async () => {
+      it('should throw error - type should be string', () => {
         const validate = () => validator.validate('hello', {
           type: null
         })
         expect(validate).toThrowError(new Error('data.type should be string, data.type should be equal to one of the allowed values'))
       })
 
-      it('should throw error - type should be one of the allowed value', async () => {
+      it('should throw error - type should be one of the allowed value', () => {
         const validate = () => validator.validate('hello', {
           type: 'okay'
         })
         expect(validate).toThrowError(new Error('data.type should be equal to one of the allowed values'))
       })
 
-      it('should throw error - data should be object', async () => {
+      it('should throw error - data should be object', () => {
         const validate = () => validator.validate('hello', [
           'type'
         ])
         expect(validate).toThrowError('data should be object')
       })
 
-      it('should validate message - type', async () => {
+      it('should validate message - type', () => {
         const validate = validator.validate('hello', {
           type: 'hello'
         })
         expect(validate).toStrictEqual(true)
       })
 
-      it('should validate message - connectionError', async () => {
+      it('should validate message - connectionError', () => {
         const validate = validator.validate('connectionError', {
           type: 'error',
           error: {
@@ -118,7 +118,7 @@ describe('factory', () => {
         expect(validate).toStrictEqual(true)
       })
 
-      it('should validate message - connectionError - float number', async () => {
+      it('should validate message - connectionError - float number', () => {
         const validate = validator.validate('connectionError', {
           type: 'error',
           error: {
@@ -129,7 +129,7 @@ describe('factory', () => {
         expect(validate).toStrictEqual(true)
       })
 
-      it('should throw error - connectionError - code number', async () => {
+      it('should throw error - connectionError - code number', () => {
         const validate = () => validator.validate('connectionError', {
           type: 'error',
           error: {
@@ -140,7 +140,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error('data.error.code should be number'))
       })
 
-      it('should throw error - connectionError - code number, msg string', async () => {
+      it('should throw error - connectionError - code number, msg string', () => {
         const validate = () => validator.validate('connectionError', {
           type: 'error',
           error: {
@@ -151,7 +151,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error('data.error.code should be number, data.error.msg should be string'))
       })
 
-      it('should validate message - connectionError - additional properties', async () => {
+      it('should validate message - connectionError - additional properties', () => {
         const validate = validator.validate('connectionError', {
           type: 'error',
           error: {
@@ -163,7 +163,7 @@ describe('factory', () => {
         expect(validate).toStrictEqual(true)
       })
 
-      it('should throw error - botAdded - icons object', async () => {
+      it('should throw error - botAdded - icons object', () => {
         const validate = () => validator.validate('botAdded', {
           type: 'bot_added',
           bot: {
@@ -178,7 +178,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error('data.bot.icons should be object'))
       })
 
-      it('should throw error - botAdded - property2 string', async () => {
+      it('should throw error - botAdded - property2 string', () => {
         const validate = () => validator.validate('botAdded', {
           type: 'bot_added',
           bot: {
@@ -194,7 +194,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error(`data.bot.icons['property2'] should be string`))
       })
 
-      it('should throw error - botAdded - type', async () => {
+      it('should throw error - botAdded - type', () => {
         const validate = () => validator.validate('botAdded', {
           type: 'bot',
           bot: {
@@ -210,7 +210,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error(`data.type should be equal to one of the allowed values`))
       })
 
-      it('should validate message - botAdded', async () => {
+      it('should validate message - botAdded', () => {
         const validate = validator.validate('botAdded', {
           type: 'bot_added',
           bot: {

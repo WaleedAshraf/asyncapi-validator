@@ -8,8 +8,8 @@ const asyncapi = require('asyncapi')
 const AsyncApiValidator = require('./AsyncApiValidator')
 
 // Loaders
-const HttpLoader = require('../loaders/HttpLoader')
-const FsLoader = require('../loaders/FsLoader')
+const HttpLoader = require('../loaders/httpLoader')
+const FsLoader = require('../loaders/fsLoader')
 
 // Parsers
 const jsonParser = require('../parsers/jsonParser')
