@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.1.0 *(2019-07-07)*
+----------------------------
+* Added tests
+* Added codecov for coverage report
+
 Version 2.0.1 *(2019-07-06)*
 ----------------------------
 * Better dir structure
