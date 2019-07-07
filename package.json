@@ -4,7 +4,7 @@
   "description": "message validator through asyncapi",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint --ignore-path .gitignore ./"
   },
   "repository": {
