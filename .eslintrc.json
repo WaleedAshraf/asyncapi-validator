@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "commonjs": true,
-    "es6": true
+    "es6": true,
+    "jest": true
   },
   "extends": "standard",
   "globals": {
@@ -16,6 +17,7 @@
     "space-before-function-paren": 0,
     "curly": ["error", "multi"],
     "object-curly-spacing": 0,
-    "no-return-await": 0
+    "no-return-await": 0,
+    "quote-props": ["error", "as-needed"]
   }
 }
