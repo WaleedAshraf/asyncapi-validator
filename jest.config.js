@@ -118,6 +118,7 @@ module.exports = {
 
   testRegex: './tests/src/.*.js$',
   rootDir: '.',
+  moduleDirectories: ['node_modules', 'src', 'loaders', 'parsers', 'utils'],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
