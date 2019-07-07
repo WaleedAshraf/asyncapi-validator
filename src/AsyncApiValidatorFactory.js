@@ -84,6 +84,7 @@ function AsyncApiValidatorFactory() {
     instance.validateSchema()
 
     this.asyncApiValidator = instance
+    this.source = source
     return this.asyncApiValidator
   }
 }
