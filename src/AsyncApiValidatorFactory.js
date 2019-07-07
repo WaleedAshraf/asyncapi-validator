@@ -1,15 +1,15 @@
 'use strict'
 
+const path = require('path')
 const utils = require('../utils')
 const asyncapi = require('asyncapi')
-const path = require('path')
 
 // Validator
 const AsyncApiValidator = require('./AsyncApiValidator')
 
 // Loaders
-const HttpLoader = require(path.resolve(__dirname, '../loaders/HttpLoader'))
-const FsLoader = require('../loaders/FsLoader')
+const HttpLoader = require('../loaders/httpLoader')
+const FsLoader = require('../loaders/fsLoader')
 
 // Parsers
 const jsonParser = require('../parsers/jsonParser')
