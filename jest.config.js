@@ -121,8 +121,11 @@ module.exports = {
   ],
 
   modulePaths: [
-    '<rootDir>',
-    '<rootDir>/src/'
+    '<rootDir>/',
+    '<rootDir>/src/',
+    '<rootDir>/parsers',
+    '<rootDir>/loaders',
+    '<rootDir>/utils'
   ],
 
   // Allows you to use a custom runner instead of Jest's default test runner
