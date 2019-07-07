@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.org/WaleedAshraf/asyncapi-validator.svg?branch=master)](https://travis-ci.org/WaleedAshraf/asyncapi-validator) [![codecov](https://codecov.io/gh/WaleedAshraf/asyncapi-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/WaleedAshraf/asyncapi-validator)
+
 # asyncapi-validator
+
 message validator through asyncapi
 
 `npm i asyncapi-validator`
