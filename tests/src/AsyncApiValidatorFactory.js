@@ -15,12 +15,12 @@ describe('factory', () => {
   })
 
   it('should parse JSON schema', async () => {
-    const validator = AsyncApiValidator.fromSource('./test/schemas/jsonSchema.json')
+    const validator = AsyncApiValidator.fromSource('./tests/schemas/jsonSchema.json')
     expect(await validator).toHaveProperty('_schema')
   })
 
   it('should throw error if schema is broken', async () => {
-    const validator = AsyncApiValidator.fromSource('./test/schemas/broken.yml')
+    const validator = AsyncApiValidator.fromSource('./tests/schemas/broken.yml')
     await expect(validator).rejects.toThrowError(new Error('data.components should NOT have additional properties'))
   })
 
