@@ -17,16 +17,22 @@ class AsyncApiValidator {
   /**
    * @param {string} key
    * @param {Object} payload
+   * @returns {boolean}
    */
   validate(key, payload) {
     if (!this.ajv)
       this.ajv = new Ajv({allErrors: true})
+    if (!this.resolvedSchema.components.messages[key]) {
+      console.log(`key ${key} not found`)
+      throw new Error(`key ${key} not found`)
+    }
     const validator = this.ajv.compile(this.resolvedSchema.components.messages[key].payload)
     const result = validator(payload)
     if (!result) {
       console.log('Invalid: ' + this.ajv.errorsText(validator.errors))
       throw new Error(this.ajv.errorsText(validator.errors))
     }
+    return true
   }
 
   validateSchema() {
