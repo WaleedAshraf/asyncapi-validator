@@ -1,4 +1,3 @@
 'use strict'
 
-const AsyncApiValidatorFactory = require('./src/AsyncApiValidatorFactory')
-module.exports = new AsyncApiValidatorFactory()
+module.exports = require('./src/AsyncApiValidatorFactory')

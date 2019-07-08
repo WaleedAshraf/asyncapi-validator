@@ -6,7 +6,7 @@ const AsyncApiValidator = require('../../index')
 describe('factory', () => {
   it('should throw error if file not found', async () => {
     const validator = AsyncApiValidator.fromSource('something')
-    await expect(validator).rejects.toThrowError(new Error(`ENOENT: no such file or directory, open 'something'`))
+    await expect(validator).rejects.toThrowError(new Error(`extension not supported: `))
   })
 
   it('should throw error if unable to parse file', async () => {
@@ -16,7 +16,7 @@ describe('factory', () => {
 
   it('should parse JSON schema', async () => {
     const validator = AsyncApiValidator.fromSource('./test/schemas/jsonSchema.json')
-    expect(await validator).toHaveProperty('_schema')
+    expect(await validator).toHaveProperty('_schema') // not good testing
   })
 
   it('should throw error if schema is broken', async () => {
@@ -30,19 +30,13 @@ describe('factory', () => {
     expect(validate).toThrowError(new Error('key lightMeasured not found'))
   })
 
-  it('should get same validator - singleton', async () => {
-    const validator = await AsyncApiValidator.fromSource(mocks.slack)
-    validator._asyncapi = null
-    const validatorTwo = await AsyncApiValidator.fromSource(mocks.slack)
-    expect(validatorTwo._asyncapi).toStrictEqual(validator._asyncapi)
-  })
-
   describe('schema 1.2.0', () => {
-    describe('streetlights', () => {
+    describe('streetlights asyncapi schema tests', () => {
       let validator
-      beforeEach(async () => {
+      beforeAll(async () => {
         validator = await AsyncApiValidator.fromSource(mocks.streetlights)
       })
+
       it('should throw error - lumens should be integer', () => {
         const validate = () => validator.validate('lightMeasured', {
           lumens: 'asd'
@@ -64,7 +58,7 @@ describe('factory', () => {
         expect(validate).toThrowError(new Error('data.lumens should be integer'))
       })
 
-      it('should validate lightMeasured', () => {
+      it('should validate proper lightMeasured message', () => {
         const validate = validator.validate('lightMeasured', {
           lumens: 7,
           sentAt: '2019-07-07T15:17:47Z'
