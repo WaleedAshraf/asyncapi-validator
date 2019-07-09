@@ -1,9 +1,7 @@
 'use strict'
 
-const fs = require('fs')
+const {readFile} = require('fs')
 const {fail} = require('assert')
-const util = require('util')
-const readFile = util.promisify(fs.readFile)
 
 class FsLoader {
   /**
@@ -17,7 +15,12 @@ class FsLoader {
    * @returns {Promise}
    */
   async load() {
-    return readFile(this._path, 'utf8')
+    return new Promise((resolve, reject) => {
+      readFile(this._path, 'utf8', (error, result) => {
+        if (error) reject(error)
+        resolve(result)
+      })
+    })
   }
 }
 
