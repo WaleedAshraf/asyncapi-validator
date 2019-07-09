@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.2.0 *(2019-07-09)*
+----------------------------
+* Added static bundle
+* Removed promisify
+
 Version 2.1.0 *(2019-07-07)*
 ----------------------------
 * Added tests

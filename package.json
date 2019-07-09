@@ -1,11 +1,14 @@
 {
   "name": "asyncapi-validator",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "message validator through asyncapi",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore ./"
+    "lint": "./node_modules/.bin/eslint ./",
+    "build": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./static/bundle.min.js",
+    "build:dev": "browserify --debug index.js -s asyncapi -o ./static/bundle.js",
+    "build:watch": "watchify index.js -o ./static/bundle.dev.js -v"
   },
   "repository": {
     "type": "git",
@@ -30,10 +33,11 @@
     "asyncapi": "^2.2.0",
     "axios": "^0.19.0",
     "json-schema-deref-sync": "^0.10.0",
-    "yamljs": "^0.3.0"
+    "yaml-js": "^0.2.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
+    "browserify": "^16.3.0",
     "codecov": "^3.5.0",
     "eslint": "^6.0.1",
     "eslint-config-standard": "^12.0.0",
@@ -41,6 +45,8 @@
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "uglify-es": "^3.3.9",
+    "watchify": "^3.11.1"
   }
 }

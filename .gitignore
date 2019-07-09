@@ -74,7 +74,10 @@ typings/
 
 # FuseBox cache
 .fusebox/
-api.json
-api.yaml
-dev.js
+
+# vscode
 .vscode/
+
+# development files
+dev/
+static/bundle.dev.js

@@ -2,18 +2,22 @@
 
 # asyncapi-validator
 
-message validator through asyncapi
+message validator through asyncapi schema
 
 `npm i asyncapi-validator`
 
+## Features
+- Validate your AsyncApi Schema against AsyncApi Schema defination
+- Validate your messages against your AsyncApi Schema defination
+- Use 'bundle.min.js' to run validator in browser
+- Load your AsyncApi Schema from local file or any URL
+- Supports AsyncApi in JSON and YAML format
+- Supports all versions of AsyncAPI
+- more coming . . .
 
-```javascript
-let Validator = require('asyncapi-validator')
-let va = await Validator.fromSource('./api.yaml')
-va.validate('Key', {1:1})
-```
 
-Methods:
+
+## Methods
 ```javascript
 /**
  * @param {String} path - local path or URL of AsyncAPI schema
@@ -26,16 +30,21 @@ fromSource(path)
  * @param {String} key
  * @param {Object} payload
  */
-validate(ley, payload)
+validate(key, payload)
 ```
 
-Examples:
+## Examples
 ```javascript
-const AsyncApiValidator = require('./index.js')
+const AsyncApiValidator = require('asyncapi-validator')
 let va = await AsyncApiValidator.fromSource('./api.yaml')
+
+// validate 'UserDeleted' key with payload
 va.validate('UserDeleted', {
   userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
   deletedBy: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
   deletedAt: '2017-01-09T08:27:22.222Z',
 })
+
+// validate 'Key' key with payload
+va.validate('Key', {1:1})
 ```
