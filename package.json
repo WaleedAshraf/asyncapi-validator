@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "./node_modules/.bin/eslint --ignore-path .gitignore ./",
+    "lint": "./node_modules/.bin/eslint ./",
     "build": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./static/bundle.min.js",
     "build:dev": "browserify --debug index.js -s asyncapi -o ./static/bundle.js",
     "build:watch": "watchify index.js -o ./static/bundle.dev.js -v"

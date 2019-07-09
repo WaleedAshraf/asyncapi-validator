@@ -79,7 +79,5 @@ typings/
 .vscode/
 
 # development files
-api.json
-api.yaml
-dev.js
+dev/
 static/bundle.dev.js
