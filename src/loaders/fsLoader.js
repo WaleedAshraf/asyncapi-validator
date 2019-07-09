@@ -17,7 +17,7 @@ class FsLoader {
    * @returns {Promise}
    */
   async load() {
-    return await readFile(this._path, 'utf8')
+    return readFile(this._path, 'utf8')
   }
 }
 

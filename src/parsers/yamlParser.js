@@ -1,6 +1,6 @@
 'use strict'
 
-const yaml = require('yamljs')
+const yaml = require('yaml-js')
 
 class YamlParser {
   /**
@@ -8,7 +8,13 @@ class YamlParser {
    * @returns {JSON}
    */
   parse(yamlString) {
-    return yaml.parse(yamlString)
+    try {
+      const parsedYaml = yaml.load(yamlString)
+      return parsedYaml
+    } catch (e) {
+      console.log('error parsing yaml', e.stack)
+      throw new Error('Unable to parse.')
+    }
   }
 }
 
