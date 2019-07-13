@@ -1,60 +1,38 @@
 'use strict'
 
-const path = require('path')
-const utils = require('./utils')
 const asyncapiSchemas = require('asyncapi')
+const Ajv = require('ajv')
 
-// Validator
 const AsyncApiValidator = require('./AsyncApiValidator')
-
-// Loaders
-const HttpLoader = require('./loaders/httpLoader')
-const FsLoader = require('./loaders/fsLoader')
-
-// Parsers
-const jsonParser = require('./parsers/jsonParser')
-const yamlParser = require('./parsers/yamlParser')
+const Parser = require('./Parser')
 
 function AsyncApiValidatorFactory() {
-  /**
-   * @param {string} extension
-   * @returns {jsonParser | yamlParser}
-   */
-  this._getParserFromExtension = (extension) => {
-    if (utils.isJson(extension))
-      return jsonParser
-    else if (utils.isYaml(extension))
-      return yamlParser
-    throw new Error(`extension not supported: ${extension}`)
-  }
-
-  /**
-   * @param {string} source
-   * @returns {HttpLoader | FsLoader}
-   */
-  this._getLoaderFromSource = (source) => {
-    if (source.startsWith('http'))
-      return new HttpLoader(source)
-
-    return new FsLoader(source)
-  }
-
   /**
    * @param {string} source
    * @returns {Promise<AsyncApiValidator>}
    */
   this.fromSource = async (source) => {
-    const extension = path.extname(source)
-    const parser = this._getParserFromExtension(extension)
-    const loader = this._getLoaderFromSource(source)
-
-    const rawSchema = await loader.load()
-    const schema = parser.parse(rawSchema)
-
+    const schema = await Parser.parse(source)
     const asyncapiVersion = schema.asyncapi
     const asyncapiSchema = asyncapiSchemas[asyncapiVersion]
 
+    validateSchema(schema, asyncapiSchema) // validate schema against AsyncApi Schema Defination
+
     return new AsyncApiValidator(schema, asyncapiSchema)
+  }
+}
+
+const validateSchema = (schema, asyncapiSchema) => {
+  // validate user defined AsyncApi schema against AsyncApi schema defination
+  const ajv = new Ajv({schemaId: 'auto', allErrors: true})
+  ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'))
+
+  const validate = ajv.compile(asyncapiSchema)
+  const valid = validate(schema)
+
+  if (!valid) {
+    console.error('Invalid: ' + ajv.errorsText(validate.errors))
+    throw new Error(ajv.errorsText(validate.errors))
   }
 }
 
