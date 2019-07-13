@@ -6,12 +6,12 @@ const AsyncApiValidator = require('../../index')
 describe('factory', () => {
   it('should throw error if file not found', async () => {
     const validator = AsyncApiValidator.fromSource('something')
-    await expect(validator).rejects.toThrowError(new Error(`extension not supported: `))
+    await expect(validator).rejects.toThrowError(`Error: Error opening file`)
   })
 
   it('should throw error if unable to parse file', async () => {
     const validator = AsyncApiValidator.fromSource(mocks.htmlFile)
-    await expect(validator).rejects.toThrowError(new Error('Unable to parse.'))
+    await expect(validator).rejects.toThrowError('SyntaxError: Error parsing')
   })
 
   it('should parse JSON schema', async () => {
@@ -19,8 +19,13 @@ describe('factory', () => {
     expect(await validator).toHaveProperty('_schema') // not good testing
   })
 
-  it('should throw error if schema is broken', async () => {
+  it('should throw error if schema body is broken', async () => {
     const validator = AsyncApiValidator.fromSource('./test/schemas/broken.yml')
+    await expect(validator).rejects.toThrowError('SyntaxError: Error resolving $ref pointer ')
+  })
+
+  it('should throw error if schema is not valid with asyncapi', async () => {
+    const validator = AsyncApiValidator.fromSource('./test/schemas/invalid.yml')
     await expect(validator).rejects.toThrowError(new Error('data.components should NOT have additional properties'))
   })
 
