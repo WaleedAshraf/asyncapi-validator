@@ -1,10 +1,10 @@
 Change Log
 ==========
 
-Version 2.2.0 *(2019-07-09)*
+Version 2.2.0 *(2019-07-15)*
 ----------------------------
-* Added static bundle
-* Removed promisify
+* Removed parsers/loaders
+* Added dist for browsers
 
 Version 2.1.0 *(2019-07-07)*
 ----------------------------
