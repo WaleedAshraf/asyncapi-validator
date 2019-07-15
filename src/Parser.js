@@ -5,7 +5,7 @@ const jsrp = require('json-schema-ref-parser')
 class Parser {
   /**
    * @param {string} source
-   * @returns {JSON} ref resolved schema object
+   * @returns {Promise} ref resolved schema object
    */
   async parse(source) {
     try {
