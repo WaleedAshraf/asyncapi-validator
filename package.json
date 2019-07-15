@@ -6,9 +6,9 @@
   "scripts": {
     "test": "jest",
     "lint": "./node_modules/.bin/eslint ./",
-    "build": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./static/bundle.min.js",
-    "build:dev": "browserify --debug index.js -s asyncapi -o ./static/bundle.js",
-    "build:watch": "watchify --debug index.js -s asyncapi -o ./static/bundle.dev.js -v"
+    "build": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./dist/bundle.min.js",
+    "build:dev": "browserify --debug index.js -s asyncapi -o ./dist/bundle.js",
+    "build:watch": "watchify --debug index.js -s asyncapi -o ./dist/bundle.dev.js -v"
   },
   "repository": {
     "type": "git",
@@ -31,8 +31,6 @@
   "dependencies": {
     "ajv": "^6.10.0",
     "asyncapi": "^2.2.0",
-    "axios": "^0.19.0",
-    "js-yaml": "^3.13.1",
     "json-schema-ref-parser": "^7.1.0"
   },
   "devDependencies": {
