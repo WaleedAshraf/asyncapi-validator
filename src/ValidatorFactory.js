@@ -1,7 +1,6 @@
 'use strict'
 
 const asyncapiSchemas = require('asyncapi')
-const Ajv = require('ajv')
 
 const MessageValidator = require('./MessageValidator')
 const SchemaValidator = require('./SchemaValidator')
