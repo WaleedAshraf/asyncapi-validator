@@ -15,7 +15,7 @@
   },
   "rules": {
     "space-before-function-paren": 0,
-    "curly": ["error", "multi"],
+    "curly": ["error", "multi-line"],
     "object-curly-spacing": 0,
     "no-return-await": 0,
     "quote-props": ["error", "as-needed"]

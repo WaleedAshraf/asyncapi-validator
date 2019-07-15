@@ -1,3 +1,3 @@
 'use strict'
 
-module.exports = require('./src/AsyncApiValidatorFactory')
+module.exports = require('./src/ValidatorFactory')
