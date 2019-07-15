@@ -9,7 +9,7 @@ class SchemaValidator {
    * @returns {boolean}
    */
   validate(schema, asyncapiSchema) {
-    // validate user defined AsyncApi schema against AsyncApi schema defination
+    // validate user defined AsyncApi schema against AsyncApi schema definition
     const ajv = new Ajv({schemaId: 'auto', allErrors: true})
     ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'))
 
