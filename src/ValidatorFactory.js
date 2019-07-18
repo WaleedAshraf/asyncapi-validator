@@ -11,14 +11,14 @@ function ValidatorFactory() {
    * @param {string} source
    * @returns {Promise<MessageValidator>}
    */
-  this.fromSource = async (source) => {
+  this.fromSource = async (source, options = {}) => {
     const schema = await Parser.parse(source)
     const asyncapiVersion = schema.asyncapi
     const asyncapiSchema = asyncapiSchemas[asyncapiVersion]
 
     SchemaValidator.validate(schema, asyncapiSchema)
 
-    return new MessageValidator(schema, asyncapiSchema)
+    return new MessageValidator(schema, options)
   }
 }
 

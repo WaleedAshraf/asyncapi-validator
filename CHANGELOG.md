@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+
+Version 2.2.1 *(2019-07-18)*
+----------------------------
+* Added support for options
+* Added support for if payload is object and schema is array
+
 Version 2.2.0 *(2019-07-15)*
 ----------------------------
 * Removed parsers/loaders

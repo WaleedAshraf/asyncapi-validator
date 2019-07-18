@@ -3,16 +3,16 @@
 const {fail} = require('assert')
 const Ajv = require('ajv')
 
-class AsyncApiValidator {
+class MessageValidator {
   /**
-   * @param {any} schema
-   * @param {any} asyncapiSchema
+   * @param {object} schema - user defnied AsyncApi Schema
+   * @param {object} options - options for validations
    */
-  constructor(schema, asyncapiSchema) {
-    this._asyncapiSchema = asyncapiSchema || fail('asyncapi is mandatory')
+  constructor(schema, options) {
     this._schema = schema || fail('schema is mandatory')
     this._messages = this._schema.components.messages
     this._ajv = new Ajv({allErrors: true})
+    this._options = options
   }
 
   /**
@@ -21,13 +21,23 @@ class AsyncApiValidator {
    * @returns {boolean}
    */
   validate(key, payload) {
+    let result = null
+    const shouldIgnoreArray = this._options.ignoreArray === true
+
     if (!this._messages[key]) {
       console.error(`key ${key} not found`)
       throw new Error(`key ${key} not found`)
     }
 
     const validator = this._ajv.compile(this._messages[key].payload)
-    const result = validator(payload)
+    const schemaIsArray = this._messages[key].payload.type === 'array'
+    const payloadIsNotArray = !Array.isArray(payload)
+
+    if (shouldIgnoreArray && schemaIsArray && payloadIsNotArray) {
+      result = validator([payload])
+    } else {
+      result = validator(payload)
+    }
 
     if (!result) {
       console.error('Invalid: ' + this._ajv.errorsText(validator.errors))
@@ -38,4 +48,4 @@ class AsyncApiValidator {
   }
 }
 
-module.exports = AsyncApiValidator
+module.exports = MessageValidator
