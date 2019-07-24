@@ -21,9 +21,10 @@ message validator through asyncapi schema
 ```javascript
 /**
  * @param {String} path - local path or URL of AsyncAPI schema
+ * @param {Object} options - options for validation
  * @returns {Promise}
  */
-fromSource(path)
+fromSource(path, options)
 
 
 /**
@@ -32,6 +33,11 @@ fromSource(path)
  */
 validate(key, payload)
 ```
+
+## Options
+| value       | type    | description                                                                                                                             |   |
+|-------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------|---|
+| ignoreArray | boolean | If true, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |   |
 
 ## Examples
 ```javascript
@@ -47,4 +53,32 @@ va.validate('UserDeleted', {
 
 // validate 'Key' key with payload
 va.validate('Key', {1:1})
+```
+
+## Errors
+Error thown from asyncapi-validator will have these properties.
+
+| key     | type   | value                   | description                                                                                                     |
+|---------|--------|-------------------------|-----------------------------------------------------------------------------------------------------------------|
+| name    | string | AsyncAPIValidationError | AsyncAPIValidationError                                                                                         |
+| key     | string |                         | "key" of payload against which schema is validated                                                              |
+| message | string |                         | [errorsText from AJV](https://github.com/epoberezkin/ajv#errorstextarrayobject-errors--object-options---string) |
+| errors  | array  |                         | [Array of errors from AJV](https://github.com/epoberezkin/ajv#validation-errors)                                |
+
+### Error Example
+```
+{
+  AsyncAPIValidationError: data.type should be equal to one of the allowed values at MessageValidator.validate (.....
+  name: 'AsyncAPIValidationError',
+  key: 'hello',
+  errors:
+    [
+      { keyword: 'enum',
+        dataPath: '.type',
+        schemaPath: '#/properties/type/enum',
+        params: [Object],
+        message: 'should be equal to one of the allowed values'
+      }
+    ]
+}
 ```
