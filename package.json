@@ -1,6 +1,6 @@
 {
   "name": "asyncapi-validator",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "message validator through asyncapi",
   "main": "index.js",
   "scripts": {

@@ -2,6 +2,7 @@
 
 const {fail} = require('assert')
 const Ajv = require('ajv')
+var ValidationError = require('./ValidationError')
 
 class MessageValidator {
   /**
@@ -21,7 +22,6 @@ class MessageValidator {
    * @returns {boolean}
    */
   validate(key, payload) {
-    let result = null
     const shouldIgnoreArray = this._options.ignoreArray === true
 
     if (!this._messages[key]) {
@@ -29,19 +29,21 @@ class MessageValidator {
       throw new Error(`key ${key} not found`)
     }
 
-    const validator = this._ajv.compile(this._messages[key].payload)
+    const payloadSchema = this._messages[key].payload
+
+    const validator = this._ajv.compile(payloadSchema)
     const schemaIsArray = this._messages[key].payload.type === 'array'
     const payloadIsNotArray = !Array.isArray(payload)
 
     if (shouldIgnoreArray && schemaIsArray && payloadIsNotArray) {
-      result = validator([payload])
-    } else {
-      result = validator(payload)
+      payload = [payload]
     }
 
+    const result = validator(payload)
+
     if (!result) {
-      console.error('Invalid: ' + this._ajv.errorsText(validator.errors))
-      throw new Error(this._ajv.errorsText(validator.errors))
+      console.error(this._ajv.errorsText(validator.errors), key)
+      throw new ValidationError(this._ajv.errorsText(validator.errors), validator.errors, key)
     }
 
     return true

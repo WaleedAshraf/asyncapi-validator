@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 2.3.0 *(2019-07-24)*
+----------------------------
+* Custom error messages
+* Updated readme
 
 Version 2.2.1 *(2019-07-18)*
 ----------------------------
