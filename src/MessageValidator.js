@@ -43,7 +43,7 @@ class MessageValidator {
 
     if (!result) {
       console.error(this._ajv.errorsText(validator.errors), key)
-      throw new ValidationError(this._ajv.errorsText(validator.errors), validator.errors, key)
+      throw new ValidationError(this._ajv.errorsText(validator.errors), key, validator.errors)
     }
 
     return true

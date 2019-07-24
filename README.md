@@ -56,9 +56,29 @@ va.validate('Key', {1:1})
 ```
 
 ## Errors
+Error thown from asyncapi-validator will have these properties.
+
 | key     | type   | value                   | description                                                                                                     |
 |---------|--------|-------------------------|-----------------------------------------------------------------------------------------------------------------|
 | name    | string | AsyncAPIValidationError | AsyncAPIValidationError                                                                                         |
 | key     | string |                         | "key" of payload against which schema is validated                                                              |
 | message | string |                         | [errorsText from AJV](https://github.com/epoberezkin/ajv#errorstextarrayobject-errors--object-options---string) |
 | errors  | array  |                         | [Array of errors from AJV](https://github.com/epoberezkin/ajv#validation-errors)                                |
+
+### Error Example
+```
+{
+  AsyncAPIValidationError: data.type should be equal to one of the allowed values at MessageValidator.validate (.....
+  name: 'AsyncAPIValidationError',
+  key: 'hello',
+  errors:
+    [
+      { keyword: 'enum',
+        dataPath: '.type',
+        schemaPath: '#/properties/type/enum',
+        params: [Object],
+        message: 'should be equal to one of the allowed values'
+      }
+    ]
+}
+```
