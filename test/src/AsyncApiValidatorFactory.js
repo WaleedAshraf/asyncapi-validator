@@ -6,7 +6,7 @@ const AsyncApiValidator = require('../../index')
 describe('factory', () => {
   it('should throw error if file not found', async () => {
     const validator = AsyncApiValidator.fromSource('something')
-    await expect(validator).rejects.toThrowError(`Error: Error opening file`)
+    await expect(validator).rejects.toThrowError('Error: Error opening fil')
   })
 
   it('should throw error if unable to parse file', async () => {
@@ -190,7 +190,7 @@ describe('factory', () => {
             }
           }
         })
-        expect(validate).toThrowError(new Error(`data.bot.icons['property2'] should be string`))
+        expect(validate).toThrowError(new Error('data.bot.icons[\'property2\'] should be string'))
       })
 
       it('should throw error - botAdded - type', () => {
@@ -206,7 +206,7 @@ describe('factory', () => {
             }
           }
         })
-        expect(validate).toThrowError(new Error(`data.type should be equal to one of the allowed values`))
+        expect(validate).toThrowError(new Error('data.type should be equal to one of the allowed values'))
       })
 
       it('should validate message - botAdded', () => {
