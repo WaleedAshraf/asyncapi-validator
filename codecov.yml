@@ -1,7 +1,9 @@
 coverage:
   status:
-    project: off
-    patch: off
+    project:
+      target: 90%
+    patch:
+      target: 90%
 comment:
   layout: "diff"
   behavior: default
