@@ -1,35 +1,64 @@
 'use strict'
 
-const {fail} = require('assert')
+const { fail } = require('assert')
 const Ajv = require('ajv')
-var ValidationError = require('./ValidationError')
+const ValidationError = require('./ValidationError')
 
 class MessageValidator {
   /**
-   * @param {object} schema - user defnied AsyncApi Schema
+   * @param {object} schema - user defined AsyncApi Schema
    * @param {object} options - options for validations
+   * @param {object} channels - simplified channels object from schema
    */
-  constructor(schema, options) {
+  constructor(schema, options, channels) {
     this._schema = schema || fail('schema is mandatory')
     this._messages = this._schema.components.messages
-    this._ajv = new Ajv({allErrors: true})
+    this._channels = channels
+    this._ajv = new Ajv({ allErrors: true })
     this._options = options
   }
 
   /**
    * @param {string} key
    * @param {Object} payload
+   * @param {Object} channel
+   * @param {Object} operation
    * @returns {boolean}
    */
-  validate(key, payload) {
+  validate(key, payload, channel = null, operation = null) {
     const shouldIgnoreArray = this._options.ignoreArray === true
+    let payloadSchema = null
 
-    if (!this._messages[key]) {
-      console.error(`key ${key} not found`)
-      throw new Error(`key ${key} not found`)
+    if (channel) {
+      if (!operation || !(operation === 'publish' || operation === 'subscribe')) {
+        console.error(`operation "${operation}" is not valid`)
+        throw new ValidationError(`operation "${operation}" is not valid`)
+      }
+
+      if (!this._options.msgIdentifier) {
+        console.error('"msgIdentifier" is required with "channel" validation')
+        throw new ValidationError('"msgIdentifier" is required with channel validation')
+      }
+
+      if (!this._channels[channel]) {
+        console.error(`channel ${channel} not found`)
+        throw new ValidationError(`channel "${channel}" not found`)
+      }
+
+      if (!this._channels[channel][operation][key]) {
+        console.error(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
+        throw new ValidationError(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
+      }
+
+      payloadSchema = this._channels[channel][operation][key].payload
+    } else {
+      if (!this._messages[key]) {
+        console.error(`key ${key} not found`)
+        throw new Error(`key ${key} not found`)
+      }
     }
 
-    const payloadSchema = this._messages[key].payload
+    payloadSchema = this._messages[key].payload
 
     const validator = this._ajv.compile(payloadSchema)
     const schemaIsArray = this._messages[key].payload.type === 'array'
