@@ -1,13 +1,19 @@
 Change Log
 ==========
 
+Version 2.4.0 *(2019-12-01)*
+----------------------------
+* Support version 2 of AsyncAPI
+* Added support for `Channel` and `Operation` validation
+* Added support for custom message identifier.
+
 Version 2.3.2 *(2019-09-01)*
 ----------------------------
 * Fixed tests lint
 
 Version 2.3.1 *(2019-09-01)*
 ----------------------------
-* Updated deps 
+* Updated dependencies
 
 Version 2.3.0 *(2019-07-24)*
 ----------------------------

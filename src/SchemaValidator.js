@@ -1,6 +1,7 @@
 'use strict'
 
 const Ajv = require('ajv')
+const ValidationError = require('./ValidationError')
 
 class SchemaValidator {
   /**
@@ -18,7 +19,7 @@ class SchemaValidator {
 
     if (!valid) {
       console.error('Invalid: ' + ajv.errorsText(validate.errors))
-      throw new Error(ajv.errorsText(validate.errors))
+      throw new ValidationError('schema validation failed', null, ajv.errorsText(validate.errors))
     }
     return true
   }

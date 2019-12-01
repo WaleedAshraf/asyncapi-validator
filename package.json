@@ -1,6 +1,6 @@
 {
   "name": "asyncapi-validator",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "message validator through asyncapi",
   "main": "index.js",
   "scripts": {
@@ -30,8 +30,8 @@
   "homepage": "https://github.com/WaleedAshraf/asyncapi-validator#readme",
   "dependencies": {
     "ajv": "^6.10.2",
-    "asyncapi": "^2.5.1",
-    "json-schema-ref-parser": "^7.1.1"
+    "asyncapi": "^2.6.0",
+    "json-schema-ref-parser": "^7.1.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
