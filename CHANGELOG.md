@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 2.4.1 *(2019-12-03)*
+----------------------------
+* Updated asyncapi to version 2.6.1 with fix for additionalProps
+
 Version 2.4.0 *(2019-12-01)*
 ----------------------------
 * Support version 2 of AsyncAPI
