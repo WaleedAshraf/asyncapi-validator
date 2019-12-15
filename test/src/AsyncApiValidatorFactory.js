@@ -353,7 +353,7 @@ describe('factory', () => {
       it('should validate UserDeleted message', () => {
         const validate = validator.validate('UserDeleted', {
           role: 'admin',
-          userName: 'user@gmail.com',
+          userName: 'user@gmail.com'
         }, 'user-events', 'publish')
         expect(validate).toStrictEqual(true)
       })

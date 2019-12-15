@@ -27,7 +27,7 @@ message validator through asyncapi schema
 fromSource(path, options)
 ```
 
-## Options
+#### Options
 | value | type | | description |
 |-----|----|----|---|
 | ignoreArray | boolean | optional | If true, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
