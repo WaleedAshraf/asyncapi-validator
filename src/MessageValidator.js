@@ -12,7 +12,7 @@ class MessageValidator {
    */
   constructor(schema, options, channels) {
     this._schema = schema || fail('schema is mandatory')
-    this._messages = this._schema.components.messages
+    this._messages = this._schema.components ? this._schema.components.messages : []
     this._channels = channels
     this._ajv = new Ajv({ allErrors: true })
     this._options = options
@@ -56,12 +56,12 @@ class MessageValidator {
         console.error(`key ${key} not found`)
         throw new Error(`key ${key} not found`)
       }
+
+      payloadSchema = this._messages[key].payload
     }
 
-    payloadSchema = this._messages[key].payload
-
     const validator = this._ajv.compile(payloadSchema)
-    const schemaIsArray = this._messages[key].payload.type === 'array'
+    const schemaIsArray = payloadSchema.type === 'array'
     const payloadIsNotArray = !Array.isArray(payload)
 
     if (shouldIgnoreArray && schemaIsArray && payloadIsNotArray) {

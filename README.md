@@ -63,7 +63,7 @@ channels:
     publish:
       message:
         name: UserDeletedMessage
-        x-custome-key: UserDeleted
+        x-custom-key: UserDeleted
         payload:
           type: object
           properties:
