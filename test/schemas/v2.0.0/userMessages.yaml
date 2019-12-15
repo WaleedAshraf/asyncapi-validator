@@ -1,0 +1,20 @@
+asyncapi: 2.0.0
+
+info:
+  title: User Events
+  version: 1.0.0
+
+channels:
+  user-events:
+    description: user related events
+    publish:
+      message:
+        name: UserDeletedMessage
+        x-custom-key: UserDeleted
+        payload:
+          type: object
+          properties:
+            userEmail:
+              type: string
+            userId:
+              type: string
