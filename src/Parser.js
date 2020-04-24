@@ -24,7 +24,6 @@ class Parser {
       const schema = await jsrp.dereference(source, options)
       return schema
     } catch (err) {
-      console.error(`error while parsing schema ${err}, ${err.stack}`)
       throw new Error(err)
     }
   }

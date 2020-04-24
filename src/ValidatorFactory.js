@@ -39,7 +39,7 @@ const constructsChannels = (schema, msgIdentifier) => {
     const publish = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
     const subscribe = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
 
-    channels[c] = {publish, subscribe}
+    channels[c] = { publish, subscribe }
   })
   return channels
 }
@@ -56,7 +56,6 @@ const getMessagesForOperation = (channel, operation, msgIdentifier) => {
     if (channel[operation].message.oneOf) {
       channel[operation].message.oneOf.forEach(m => {
         if (!m[msgIdentifier]) {
-          console.error(`msgIdentifier "${msgIdentifier}" does not exist`)
           throw new ValidationError(`msgIdentifier "${msgIdentifier}" does not exist`, null, JSON.stringify(m))
         }
         messages[m[msgIdentifier]] = m
@@ -64,7 +63,6 @@ const getMessagesForOperation = (channel, operation, msgIdentifier) => {
     } else {
       const tempMsg = channel[operation].message
       if (!tempMsg[msgIdentifier]) {
-        console.error(`msgIdentifier "${msgIdentifier}" does not exist`)
         throw new ValidationError(`msgIdentifier "${msgIdentifier}" does not exist`, null, JSON.stringify(tempMsg))
       }
       messages[tempMsg[msgIdentifier]] = tempMsg
