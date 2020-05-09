@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 2.4.3 *(2020-05-09)*
+----------------------------
+* bump dependencies
+* remove watchify
+
+Version 2.4.2 *(2019-12-20)*
+----------------------------
+* Fixed validation for schema without components
+
 Version 2.4.1 *(2019-12-03)*
 ----------------------------
 * Updated asyncapi to version 2.6.1 with fix for additionalProps

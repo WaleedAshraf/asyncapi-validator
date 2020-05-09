@@ -7,8 +7,7 @@
     "test": "jest",
     "lint": "./node_modules/.bin/eslint ./",
     "build": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./dist/bundle.min.js",
-    "build:dev": "browserify --debug index.js -s asyncapi -o ./dist/bundle.js",
-    "build:watch": "watchify --debug index.js -s asyncapi -o ./dist/bundle.dev.js -v"
+    "build:dev": "browserify --debug index.js -s asyncapi -o ./dist/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -29,22 +28,21 @@
   },
   "homepage": "https://github.com/WaleedAshraf/asyncapi-validator#readme",
   "dependencies": {
-    "ajv": "^6.10.2",
-    "asyncapi": "^2.6.1",
-    "json-schema-ref-parser": "^7.1.2"
+    "@apidevtools/json-schema-ref-parser": "^9.0.1",
+    "ajv": "^6.12.2",
+    "asyncapi": "^2.6.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "browserify": "^16.5.0",
-    "codecov": "^3.5.0",
-    "eslint": "^6.3.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.2.0",
+    "@types/jest": "^25.2.1",
+    "browserify": "^16.5.1",
+    "codecov": "^3.6.5",
+    "eslint": "^7.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^24.9.0",
-    "uglify-es": "^3.3.9",
-    "watchify": "^3.11.1"
+    "jest": "^26.0.1",
+    "uglify-es": "^3.3.9"
   }
 }

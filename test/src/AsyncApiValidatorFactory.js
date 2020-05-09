@@ -11,7 +11,7 @@ describe('factory', () => {
 
   it('should throw error if unable to parse file', async () => {
     const validator = AsyncApiValidator.fromSource(mocks.htmlFile)
-    await expect(validator).rejects.toThrowError('SyntaxError: Error parsing')
+    await expect(validator).rejects.toThrowError('ParserError: Error parsing')
   })
 
   it('should parse JSON schema', async () => {
@@ -21,7 +21,7 @@ describe('factory', () => {
 
   it('should throw error if schema body is broken', async () => {
     const validator = AsyncApiValidator.fromSource('./test/schemas/broken.yml')
-    await expect(validator).rejects.toThrowError('SyntaxError: Error resolving $ref pointer ')
+    await expect(validator).rejects.toThrowError('MissingPointerError: Token "schemas" does not exist.')
   })
 
   it('should throw error if schema is not valid with asyncapi', async () => {
