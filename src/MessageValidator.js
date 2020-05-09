@@ -31,29 +31,24 @@ class MessageValidator {
 
     if (channel) {
       if (!operation || !(operation === 'publish' || operation === 'subscribe')) {
-        console.error(`operation "${operation}" is not valid`)
         throw new ValidationError(`operation "${operation}" is not valid`)
       }
 
       if (!this._options.msgIdentifier) {
-        console.error('"msgIdentifier" is required with "channel" validation')
         throw new ValidationError('"msgIdentifier" is required with channel validation')
       }
 
       if (!this._channels[channel]) {
-        console.error(`channel ${channel} not found`)
         throw new ValidationError(`channel "${channel}" not found`)
       }
 
       if (!this._channels[channel][operation][key]) {
-        console.error(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
         throw new ValidationError(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
       }
 
       payloadSchema = this._channels[channel][operation][key].payload
     } else {
       if (!this._messages[key]) {
-        console.error(`key ${key} not found`)
         throw new Error(`key ${key} not found`)
       }
 
@@ -71,7 +66,6 @@ class MessageValidator {
     const result = validator(payload)
 
     if (!result) {
-      console.error(this._ajv.errorsText(validator.errors), key)
       throw new ValidationError(this._ajv.errorsText(validator.errors), key, validator.errors)
     }
 
