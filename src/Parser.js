@@ -1,5 +1,3 @@
-'use strict'
-
 const jsrp = require('@apidevtools/json-schema-ref-parser')
 
 class Parser {

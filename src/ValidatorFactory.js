@@ -1,8 +1,5 @@
-'use strict'
-
 const asyncapiSchemas = require('asyncapi')
-
-var ValidationError = require('./ValidationError')
+const ValidationError = require('./ValidationError')
 const MessageValidator = require('./MessageValidator')
 const SchemaValidator = require('./SchemaValidator')
 const Parser = require('./Parser')
@@ -39,7 +36,7 @@ const constructsChannels = (schema, msgIdentifier) => {
     const publish = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
     const subscribe = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
 
-    channels[c] = { publish, subscribe }
+    channels[c] = {publish, subscribe}
   })
   return channels
 }

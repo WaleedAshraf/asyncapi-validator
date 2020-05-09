@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * @param {String} message - Error message
  * @param {String} key - Key of message against which payload is validated

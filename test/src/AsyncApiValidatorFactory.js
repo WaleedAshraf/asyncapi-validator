@@ -1,5 +1,3 @@
-'use strict'
-
 const mocks = require('../mocks')
 const AsyncApiValidator = require('../../index')
 
@@ -321,6 +319,7 @@ describe('factory', () => {
         const validate = () => validator.validate('DeviceInstallationResponsePublished', {
           type: 'null'
         }, 'device-installation-events', 'publish')
+        // eslint-disable-next-line quotes, max-len
         expect(validate).toThrowError(new Error("data should have required property 'id', data should have required property 'key', data should have required property 'generated', data should have required property 'requestId'"))
       })
 
@@ -347,7 +346,7 @@ describe('factory', () => {
     describe('userMessages', () => {
       let validator
       beforeEach(async () => {
-        validator = await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/userMessages.yaml', { msgIdentifier: 'x-custom-key' })
+        validator = await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/userMessages.yaml', {msgIdentifier: 'x-custom-key'})
       })
 
       it('should validate UserDeleted message', () => {

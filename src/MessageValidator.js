@@ -1,6 +1,4 @@
-'use strict'
-
-const { fail } = require('assert')
+const {fail} = require('assert')
 const Ajv = require('ajv')
 const ValidationError = require('./ValidationError')
 
@@ -14,7 +12,7 @@ class MessageValidator {
     this._schema = schema || fail('schema is mandatory')
     this._messages = this._schema.components ? this._schema.components.messages : []
     this._channels = channels
-    this._ajv = new Ajv({ allErrors: true })
+    this._ajv = new Ajv({allErrors: true})
     this._options = options
   }
 

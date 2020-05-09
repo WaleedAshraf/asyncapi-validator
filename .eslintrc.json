@@ -11,19 +11,31 @@
     "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 11
   },
   "rules": {
-    "space-before-function-paren": 0,
+    "space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
     "curly": ["error", "multi-line"],
-    "object-curly-spacing": 0,
-    "no-return-await": 0,
+    "no-return-await": "error",
     "quote-props": ["error", "as-needed"],
-    "arrow-spacing": 1,
-    "space-before-blocks": 1,
-    "keyword-spacing": 1,
-    "indent": [1, 2, {"SwitchCase": 1}],
-    "key-spacing": [1, {"beforeColon": false, "afterColon": true, "mode": "minimum"}],
-    "comma-spacing": [1, { "before": false, "after": true }]
+    "arrow-spacing": "error",
+    "space-before-blocks": "error",
+    "keyword-spacing": "error",
+    "indent": ["error", 2, {"SwitchCase": 1}],
+    "key-spacing": ["error", {"beforeColon": false, "afterColon": true, "mode": "minimum"}],
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "camelcase": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "semi": ["error", "never"],
+    "max-len": ["error", 150, 4],
+    "generator-star-spacing": ["error", {"before": true, "after": false}],
+    "quotes": ["error", "single"],
+    "strict": ["error", "global"],
+    "object-curly-spacing": ["error", "never"]
   }
 }
