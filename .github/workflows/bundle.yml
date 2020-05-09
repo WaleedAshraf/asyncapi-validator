@@ -1,0 +1,23 @@
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm run build
+      - run: npm ci
+      - run: npm test
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+        with:
+          commit_message: update bundle.min.js
+          branch: ${{ github.master }}
+
