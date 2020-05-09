@@ -82,3 +82,5 @@ typings/
 dev/
 dist/bundle.dev.js
 dist/bundle.js
+
+.DS_Store
