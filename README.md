@@ -4,12 +4,13 @@
 
 message validator through asyncapi schema
 
+_Note: This library works with v2 of AsyncAPI Schema. Support for v1 is deprecated and will be removed in next major version._
+
 `npm i asyncapi-validator`
 
 ## Features
 - Validate your AsyncApi Schema against AsyncApi Schema definition
 - Validate your messages against your AsyncApi Schema definition
-- Use 'bundle.min.js' to run validator in browser
 - Load your AsyncApi Schema from local file or any URL
 - Supports AsyncApi in JSON and YAML format
 - Supports all versions of AsyncAPI
@@ -20,7 +21,7 @@ message validator through asyncapi schema
 ```javascript
 /** 
  * Load and Parse the schema from source. You only need to do this once, and then just use .validate() method for validations.
- * @param {String} path - local path or URL of schema
+ * @param {string} path - local path or URL of schema
  * @param {Object} options - options for validation
  * @returns {Promise}
  */
@@ -31,24 +32,24 @@ fromSource(path, options)
 | value | type | | description |
 |-----|----|----|---|
 | ignoreArray | boolean | optional | If true, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
-| msgIdentifier | string | required with channel validation | Name of parameter whose value will be used as `"key"` in `.validate()` method. Normally it is `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+| msgIdentifier | string | required with AsyncAPI v2 | Name of parameter whose value will be used as `"key"` in `.validate()` method. Normally it is `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
 
 ### .validate()
 ```
 /**
- * Method to validate the Payload against schema defination.
- * @param {String} key - message key
- * @param {Object} payload - payload of the message
- * @param {string} channel - name of the channel/topic
- * @param {string} operation - publish | subscribe (required with channel validation)
+ * Method to validate the Payload against schema definition.
+ * @param {string} key - required - message key
+ * @param {Object} payload - required - payload of the message
+ * @param {string} channel - required - name of the channel/topic (optional with AsyncAPI v1)
+ * @param {string} operation - required - publish | subscribe (optional with AsyncAPI v1)
  * @returns {boolean}
  */
 validate(key, payload, channel, operation)
 ```
 
-_Note: 'channel' validation with 'msgIdentifier' and 'operation' is only supported with AsyncAPI Version >= 2.0.0_
+_Note: 'channel' and 'operation' can only be used with AsyncAPI v2. Both are required with AsyncAPI v2.
 
-## Example with Channel validation
+## Example usage,
 Example Schema
 ```
 asyncapi: 2.0.0
@@ -84,7 +85,7 @@ va.validate('UserDeleted', {
 ```
 In above example, `"msgIdentifier"` is `"x-custom-key"`. That's why, `"UserDeleted"` has been use as `"key"` in `"va.validate()"`
 
-## Example without channel validation (not recomended)
+## Example usage with AsyncAPI V1 (deprecated)
 ```javascript
 const AsyncApiValidator = require('asyncapi-validator')
 let va = await AsyncApiValidator.fromSource('./api.yaml')
@@ -96,14 +97,19 @@ va.validate('UserDeleted', {
   deletedAt: '2017-01-09T08:27:22.222Z',
 })
 
-// validate 'Key' key with payload
-va.validate('Key', {1:1})
+// validate 'UserCreated' key with payload
+va.validate('UserCreated', {1:1})
 ```
-For this to work, key `UserDeleted` must be present in such way.
+For these examples to work, key `UserDeleted` and `UserCreated` must be present in such way.
 ```
 components:
   messages:
     UserDeleted:
+              ...
+              ...
+    UserCreated:
+              ...
+              ...
 ```
 
 ## Errors
