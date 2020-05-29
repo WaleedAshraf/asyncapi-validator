@@ -53,9 +53,17 @@ describe('factory', () => {
     expect(validate).toThrowError(new Error('"msgIdentifier" is required with channel validation'))
   })
 
-  it('should throw error - msgIdentifier does not exist', async () => {
+  it('should throw error - msgIdentifier does not exist for one-of message', async () => {
     try {
       await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/deviceMessages.yaml', {msgIdentifier: 'hello'})
+    } catch (e) {
+      expect(e.message).toBe('msgIdentifier "hello" does not exist')
+    }
+  })
+
+  it('should throw error - msgIdentifier does not exist', async () => {
+    try {
+      await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/userMessages.yaml', {msgIdentifier: 'hello'})
     } catch (e) {
       expect(e.message).toBe('msgIdentifier "hello" does not exist')
     }
