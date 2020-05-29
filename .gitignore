@@ -80,5 +80,4 @@ typings/
 
 # development files
 dev/
-dist/bundle.dev.js
-dist/bundle.js
+dist/
