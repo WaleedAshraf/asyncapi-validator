@@ -1,13 +1,11 @@
 {
   "name": "asyncapi-validator",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "description": "message validator through asyncapi schema",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "./node_modules/.bin/eslint ./",
-    "bundle": "browserify index.js -s asyncapi | uglifyjs --compress --mangle -o ./dist/bundle.min.js",
-    "bundle:dev": "browserify --debug index.js -s asyncapi -o ./dist/bundle.js"
+    "lint": "./node_modules/.bin/eslint ./"
   },
   "repository": {
     "type": "git",
