@@ -16,6 +16,21 @@ _Note: This library works with v2 of AsyncAPI Schema. Support for v1 is deprecat
 - Supports all versions of AsyncAPI
 - more coming . . .
 
+## How it works
+asyncapi-validator validates the payload of the messages, as described in your schema for a certian message. To validate aginst
+a certian message, it needs to find which messsage are you pointing to. For that, you need to tell it `channle`, `operation`, and `key` of the message.
+```js
+validate(key, payload, channel, operation)
+```
+
+- One `channel` should be defined only once in your whole schema.
+- The `key` should be unique for an `operation` on a `channel`.
+
+That means,
+- Messages going to different operations on one channel, can have same `key`.
+- Message going to different channels, can have same `key`
+
+
 ## Methods
 ### .fromSource()
 ```javascript
@@ -32,7 +47,7 @@ fromSource(path, options)
 | value | type | | description |
 |-----|----|----|---|
 | ignoreArray | boolean | optional | If true, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
-| msgIdentifier | string | required with AsyncAPI v2 | Name of parameter whose value will be used as `"key"` in `.validate()` method. Normally it is `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+| msgIdentifier | string | required with AsyncAPI v2 | Name of parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
 
 ### .validate()
 ```
@@ -47,7 +62,7 @@ fromSource(path, options)
 validate(key, payload, channel, operation)
 ```
 
-_Note: 'channel' and 'operation' can only be used with AsyncAPI v2. Both are required with AsyncAPI v2.
+_Note: 'channel' and 'operation' can only be used with AsyncAPI v2. Both are required with AsyncAPI v2._
 
 ## Example usage,
 Example Schema
