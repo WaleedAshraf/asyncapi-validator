@@ -17,19 +17,19 @@ _Note: This library works with v2 of AsyncAPI Schema. Support for v1 is deprecat
 - more coming . . .
 
 ## How it works
-asyncapi-validator validates the payload of the messages, as described in your schema for a certian message. To validate aginst
-a certian message, it needs to find which messsage are you pointing to. For that, you need to tell it `channle`, `operation`, and `key` of the message.
+asyncapi-validator validates the payload of the messages of a certian message, as described in your schema document. To validate aginst
+a certian message, it needs to find the messsage are you pointing to in schema document. For that, you need to pass it `channle`, `operation`, and `key` of the message.
+
 ```js
 validate(key, payload, channel, operation)
 ```
 
-- One `channel` should be defined only once in your whole schema.
+- One `channel` should be defined only once in your whole schema document.
 - The `key` should be unique for an `operation` on a `channel`.
 
 That means,
 - Messages going to different operations on one channel, can have same `key`.
-- Message going to different channels, can have same `key`
-
+- Messages going to different channels, can have same `key`
 
 ## Methods
 ### .fromSource()
