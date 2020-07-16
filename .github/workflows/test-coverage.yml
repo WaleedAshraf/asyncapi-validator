@@ -1,12 +1,10 @@
-name: Node.js Package
+name: Run Test & Coverage
 
-on:
-  release:
-    types: [created]
+on: [push]
 
 jobs:
-  publish-npm:
-    needs: build
+  run:
+    name: Test & Coverage
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -26,14 +24,11 @@ jobs:
       with:
         node-version: '12'
 
-    - name: Installing packages
+    - name: npm clean install
     - run: npm ci
-
-    - name: Linting and Testing
+    - name: linting and testing
     - run: npm lint
     - run: npm test
 
-    - name: Publishing to NPM
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
