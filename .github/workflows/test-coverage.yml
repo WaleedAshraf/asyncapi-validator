@@ -1,12 +1,9 @@
-name: NPM Package
+name: Unit Tests
 
-on:
-  release:
-    types: [created]
+on: [push]
 
 jobs:
-  publish-npm:
-    name: Build
+  run:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -21,7 +18,7 @@ jobs:
     - run: git checkout HEAD^2
       if: ${{ github.event_name == 'pull_request' }}
 
-    - name: Setup NodeJS
+    - name: Setup nodejs and run tests
       uses: actions/setup-node@v2-beta
       with:
         node-version: '12'
@@ -31,7 +28,5 @@ jobs:
         npm run lint
         npm test
 
-    - name: Publishing to NPM
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
