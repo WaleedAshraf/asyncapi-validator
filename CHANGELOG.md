@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 2.4.5 *(2020-07-16)*
+----------------------------
+* remove travis integration
+* use github actions for testing and coverage report
+
+Version 2.4.4 *(2020-05-29)*
+----------------------------
+* remove dist folder
+
 Version 2.4.3 *(2020-05-09)*
 ----------------------------
 * bump dependencies

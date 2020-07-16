@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish-npm:
-    name: Publish
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -32,6 +32,6 @@ jobs:
         npm test
 
     - name: Publishing to NPM
-    - run: npm publish
+      run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
