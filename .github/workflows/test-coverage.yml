@@ -1,4 +1,4 @@
-name: Run Test & Coverage
+name: Unit Tests
 
 on: [push]
 
@@ -18,7 +18,7 @@ jobs:
     - run: git checkout HEAD^2
       if: ${{ github.event_name == 'pull_request' }}
 
-    - name: Setup NodeJS
+    - name: Setup nodejs and run tests
       uses: actions/setup-node@v2-beta
       with:
         node-version: '12'
