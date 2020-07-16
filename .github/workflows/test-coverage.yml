@@ -24,11 +24,10 @@ jobs:
       with:
         node-version: '12'
 
-    - name: npm clean install
-    - run: npm ci
-    - name: linting and testing
-    - run: npm lint
-    - run: npm test
+    - run: |
+        npm ci
+        npm run lint
+        npm test
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1

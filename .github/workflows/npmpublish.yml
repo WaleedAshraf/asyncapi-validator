@@ -6,7 +6,6 @@ on:
 
 jobs:
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -26,12 +25,10 @@ jobs:
       with:
         node-version: '12'
 
-    - name: Installing packages
-    - run: npm ci
-
-    - name: Linting and Testing
-    - run: npm lint
-    - run: npm test
+    - run: |
+        npm ci
+        npm run lint
+        npm test
 
     - name: Publishing to NPM
     - run: npm publish
