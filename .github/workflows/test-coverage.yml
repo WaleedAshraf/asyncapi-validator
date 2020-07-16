@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   run:
-    name: Test & Coverage
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
