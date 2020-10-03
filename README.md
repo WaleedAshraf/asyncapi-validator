@@ -16,57 +16,47 @@ _Note: This library works with v2 of AsyncAPI Schema. Support for v1 is deprecat
 - Supports all versions of AsyncAPI
 - more coming . . .
 
-## How it works
-asyncapi-validator validates the payload of the messages of a certian message, as described in your schema document. To validate aginst
-a certian message, it needs to find the messsage are you pointing to in schema document. For that, you need to pass it `channle`, `operation`, and `key` of the message.
+## Class Methods
 
+### AsyncApiValidator.fromSource()
 ```js
-validate(key, payload, channel, operation)
-```
-
-- One `channel` should be defined only once in your whole schema document.
-- The `key` should be unique for an `operation` on a `channel`.
-
-That means,
-- Messages going to different operations on one channel, can have same `key`.
-- Messages going to different channels, can have same `key`
-
-## Methods
-### .fromSource()
-```javascript
 /** 
- * Load and Parse the schema from source. You only need to do this once, and then just use .validate() method for validations.
- * @param {string} path - local path or URL of schema
+ * Load and Parse the schema from source.
+ * @param {string} path - local PATH or URL of schema
  * @param {Object} options - options for validation
  * @returns {Promise}
  */
-fromSource(path, options)
+AsyncApiValidator.fromSource(path, options)
 ```
 
 #### Options
 | value | type | | description |
 |-----|----|----|---|
-| ignoreArray | boolean | optional | If true, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
-| msgIdentifier | string | required with AsyncAPI v2 | Name of parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+| ignoreArray | boolean | optional | If `true`, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
+| msgIdentifier | string | required | Name of parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+
+## Instance Methods
 
 ### .validate()
-```
+```js
 /**
  * Method to validate the Payload against schema definition.
  * @param {string} key - required - message key
  * @param {Object} payload - required - payload of the message
- * @param {string} channel - required - name of the channel/topic (optional with AsyncAPI v1)
- * @param {string} operation - required - publish | subscribe (optional with AsyncAPI v1)
+ * @param {string} channel - required - name of the channel/topic
+ * @param {string} operation - required - publish | subscribe
  * @returns {boolean}
  */
-validate(key, payload, channel, operation)
+.validate(key, payload, channel, operation)
 ```
-
 _Note: 'channel' and 'operation' can only be used with AsyncAPI v2. Both are required with AsyncAPI v2._
 
-## Example usage,
-Example Schema
-```
+### .schema
+`.schema` property can be used to access AsyncAPI schema, which is parsed into JSON, and all the refs are resolved.
+
+## Example usage
+Schema
+```yaml
 asyncapi: 2.0.0
 
 info:
@@ -88,7 +78,7 @@ channels:
             userId:
               type: string
 ```
-```javascript
+```js
 const AsyncApiValidator = require('asyncapi-validator')
 let va = await AsyncApiValidator.fromSource('./api.yaml', {msgIdentifier: 'x-custom-key'})
 
@@ -98,34 +88,7 @@ va.validate('UserDeleted', {
   userEmail: 'alex@mail.com',
 }, 'user-events', 'publish')
 ```
-In above example, `"msgIdentifier"` is `"x-custom-key"`. That's why, `"UserDeleted"` has been use as `"key"` in `"va.validate()"`
-
-## Example usage with AsyncAPI V1 (deprecated)
-```javascript
-const AsyncApiValidator = require('asyncapi-validator')
-let va = await AsyncApiValidator.fromSource('./api.yaml')
-
-// validate 'UserDeleted' key with payload
-va.validate('UserDeleted', {
-  userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
-  deletedBy: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
-  deletedAt: '2017-01-09T08:27:22.222Z',
-})
-
-// validate 'UserCreated' key with payload
-va.validate('UserCreated', {1:1})
-```
-For these examples to work, key `UserDeleted` and `UserCreated` must be present in such way.
-```
-components:
-  messages:
-    UserDeleted:
-              ...
-              ...
-    UserCreated:
-              ...
-              ...
-```
+In above example, `"msgIdentifier"` is `"x-custom-key"`. That's why, `"UserDeleted"` is used `"key"` in `"va.validate()"`
 
 ## Errors
 Error thrown from asyncapi-validator will have these properties.
@@ -138,7 +101,7 @@ Error thrown from asyncapi-validator will have these properties.
 | errors  | array  |                         | [Array of errors from AJV](https://github.com/epoberezkin/ajv#validation-errors)                                |
 
 ### Error Example
-```
+```js
 {
   AsyncAPIValidationError: data.type should be equal to one of the allowed values at MessageValidator.validate (.....
   name: 'AsyncAPIValidationError',
@@ -153,4 +116,46 @@ Error thrown from asyncapi-validator will have these properties.
       }
     ]
 }
+```
+
+## How it works
+asyncapi-validator validates the payload of the messages of a certain message, as described in your schema document. To validate against
+a certain message, it needs to find the message are you pointing to in schema document. For that, you need to pass it `channel`, `operation`, and `key` of the message.
+
+```js
+validate(key, payload, channel, operation)
+```
+
+- One `channel` should be defined only once in your whole schema document.
+- The `key` should be unique for an `operation` on a `channel`.
+
+That means,
+- Messages going to different operations on one channel, can have same `key`.
+- Messages going to different channels, can have same `key`
+
+## Example usage with AsyncAPI V1 (deprecated since v2.5.0)
+```js
+const AsyncApiValidator = require('asyncapi-validator')
+let va = await AsyncApiValidator.fromSource('./api.yaml')
+
+// validate 'UserDeleted' key with payload
+va.validate('UserDeleted', {
+  userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+  deletedBy: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+  deletedAt: '2017-01-09T08:27:22.222Z',
+})
+
+// validate 'UserCreated' key with payload
+va.validate('UserCreated', {1:1})
+```
+For these examples to work, key `UserDeleted` and `UserCreated` must be present in such way.
+```yaml
+components:
+  messages:
+    UserDeleted:
+              ...
+              ...
+    UserCreated:
+              ...
+              ...
 ```
