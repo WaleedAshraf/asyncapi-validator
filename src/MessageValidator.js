@@ -14,6 +14,8 @@ class MessageValidator {
     this._channels = channels
     this._ajv = new Ajv({allErrors: true})
     this._options = options
+
+    this.schema = schema
   }
 
   /**

@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 2.5.0 *(2020-10-03)*
+----------------------------
+* Provide `.schema` property on instance, to access ref resolved JSON schema.
+* Add deprecation message for AsyncAPI v1.
+
 Version 2.4.5 *(2020-07-16)*
 ----------------------------
 * remove travis integration
