@@ -2,40 +2,8 @@ asyncapi: 2.0.0
 info:
   title: Relayr MQTT Broker
   version: 1.16.1
-  description: |
-
-    The **relayr** MQTT Broker allows your IoT devices to communicate with the **relayr** [Cloud](https://api-documentation.relayr.io/)
-    using the [MQTT protocol](http://mqtt.org/).
-
-    On the **relayr** broker, messages can be published with [QoS](https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels/)
-    0 or 1. The data published to the broker can be raw JSON data or compressed `gzip`
-    JSON data for all topics.
-
-    ## Requirements
-
-    ### Authorization
-
-    - [MQTT credentials](http://api-documentation.relayr.io/#tag/MQTT-Credentials-Device)
-    - [Certificate chain](https://curl.haxx.se/docs/caextract.html)
-
-    ### Tools
-
-    - Any [MQTT client](https://www.hivemq.com/blog/seven-best-mqtt-client-tools/)
-
-    
-    _Generated on {TIME_OF_GENERATION}_
-
+  description: The **relayr** MQTT Broker
 x-topic-separator: /
-
-servers:
-  default:
-    url: 'cloud-mqtt.relayr.io:8883'
-    description: MQTT broker
-    protocol: mqtt
-
-    security:
-      - userPass: []
-      - X509Certificate: []
 
 channels:
   'devices/{deviceId}/measurements':
@@ -164,9 +132,7 @@ components:
 
     datetime:
       description: |
-        Date and time of the message. We don't store data with higher precision than millisecond.
-        Measurements sent for the same millisecond will overwrite each other. If it is a "number" it should be Unix timestamp in milliseconds.
-        If it is a string, it should be ISO 8601 format.
+        Date and time of the message.
       oneOf:
         - type: number
         - type: string
@@ -553,9 +519,6 @@ components:
       properties:
         score:
           description: The raw anomaly score of the edge event. 
-            The higher the score, the more anomalous the event. 
-            The score can, but does not have to be normalized to the range [0,1]. 
-            If the anomaly score is not normalized to [0,1], we can normalize the score in the cloud using a `ScoreNormalizer` in the `analytics-event-service`.
           type: number
         totalNumberOfContributors:
           description: The total number of contributors (ie features) that were considered by the anomaly model, 
@@ -564,32 +527,19 @@ components:
           minimum: 0
         attributeImportance:
           type: object
-          description: A list of features and their respective importances. 
-            This is a measure of the relative "importance" of each of the features used by the model. 
-            Each feature is assigned a percentage weighting of how much it contributed to the anomaly score. 
-            In the above example, the model has thus determined that one feature is 90% responsible for the current anomaly, 
-            and another feature for the remaining 10%. All attributeImportances sum up to 1.0. 
-            The list of attributeImportances is truncated to the N most important features, where N is configurable.
+          description: A list of features and their respective importance. 
           required:
             - rawFeatures
             - engineeredFeatures
           properties:
             rawFeatures:
               type: object
-              description: A mapping between features' names and their respective importances, grouped by respective device ids.
+              description: A mapping between features' names and their respective importance, grouped by respective device ids.
             engineeredFeatures:
               type: object
-              description: A mapping between features' names and their respective importances.
+              description: A mapping between features' names and their respective importance.
         anomalyRegions:
           description: Represents the models interpretation of the most likely range of values it expects to find for that particular feature. 
-            Provided for each of the N most important features. 
-            The `min` and `max` determines the lower and upper bounds of the encoded anomaly region, 
-            and the `values` list represents equally spaced buckets over that range. 
-            The values themselves represent the relative expectation of finding the feature within this region. 
-            The lower the value, the higher is the probability to find the value in that bucket. 
-            In other words, the values array encodes an inverse probability distribution. 
-            Observing a feature value outside the range [`min`, `max`] always corresponds to an anomalous feature.  
-            The `featureValue` encodes the actual value of the feature when the event was created.
           type: object
           required:
             - rawFeatures
@@ -608,7 +558,7 @@ components:
           description: The cloud2.0 deviceGroupId to which this `anomaly event` belongs.
           $ref: '#/components/schemas/deviceGroupId'
         phaseName:
-          description: Most systems operate in multiple states or phases, the most simple example being on and off. Take for example a coffee machine, this can have multiple different phases such as grinding beans, boiling water, extracting coffee, frothing milk etc.. For the purposes of analytics and machine learning, attempting to build a model to detect anomalies or specific behaviours across all of those drastically different phases is not a simple task. A more reliable approach would be to create one more specifically taylored model to detect problems in each of the phases. The `phaseName` is a string that is used to differentiate those phases.
+          description: Most systems operate in multiple states or phases.
           type: string
           minLength: 1
           maxLength: 64
@@ -625,7 +575,7 @@ components:
     userPass:
       type: userPassword
       description: |
-        Username and password obtained from the **Cloud** [MQTT endpoints](http://api-documentation.relayr.io/#tag/MQTT-Credentials-Device)
+        Username and password
     X509Certificate:
       type: X509
       description: |
@@ -636,7 +586,7 @@ components:
     locations:
       name: devices/locations
       summary: Location of the device
-      description: Device location is received from the device through MQTT and published to Kafka. Location service receives the Kafka message and updates the device location.
+      description: Device location
       tags:
         - name: location
       headers:
@@ -685,7 +635,6 @@ components:
       summary: Publish measurement(s)
       description: |
         Measurements are sent in an array which contains one or more measurements
-        for a single device. Measurements **must** be defined in the [device model version](http://api-documentation.relayr.io/#tag/Device-Models/paths/~1device-models~1{modelId}~1versions/post).
       tags:
         - name: measurements
       payload:
@@ -716,8 +665,7 @@ components:
     commands:
       name: devices/commands
       description: |
-        Commands can be sent and executed on devices through the **Cloud** command import [endpoint](http://api-documentation.relayr.io/#tag/Commands-Import-HTTP)
-        and command execution [endpoint](http://api-documentation.relayr.io/#tag/Commands-Execution-HTTP).
+        Commands can be sent and executed on devices
       summary: Subscribe to device commands
       tags:
         - name: commands
@@ -747,8 +695,7 @@ components:
     configs:
       name: devices/configs
       description: |
-        Configurations can be sent to devices through the **Cloud** configuration [endpoints](http://services-docs.relayr.io/ext-api/#tag/Device-configurations/paths/~1devices~1{deviceId}~1configurations/post).
-      summary: Subscribe to device configurations
+        Configurations can be sent to devices
       tags:
         - name: configurations
       payload:
@@ -792,8 +739,7 @@ components:
     installations:
       name: devices/installations
       description: |
-        Installations can be sent to devices through the **Cloud** software installation [endpoints](http://api-documentation.relayr.io/#tag/Software-Installation-Device).
-      summary: Subscribe to device installations
+        Installations can be sent to devices
       tags:
         - name: installations
       payload:
@@ -822,8 +768,7 @@ components:
     errors:
       name: devices/errors
       description: |
-        When malformed message is published it will be filtered out and rejected. \
-        Reason for rejection can be obtained from the **/errors** topic.
+        When malformed message is published it will be filtered out and rejected.
       summary: Subscribe to device errors
       tags:
         - name: errors
