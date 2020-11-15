@@ -4,16 +4,16 @@
 
 message validator through asyncapi schema
 
-_Note: This library works with v2 of AsyncAPI Schema. Support for v1 is deprecated and will be removed in next major version._
+_Note: This package only support AsyncAPI Schema v2.0.0 or above. Since v3.0.0, support for AsyncAPI Schema v1.0.2 has been removed.
 
 `npm i asyncapi-validator`
 
 ## Features
-- Validate your AsyncApi Schema against AsyncApi Schema definition
-- Validate your messages against your AsyncApi Schema definition
+- Validate your AsyncApi Document against AsyncApi Schema definition
+- Validate your messages against your AsyncApi Document
 - Load your AsyncApi Schema from local file or any URL
 - Supports AsyncApi in JSON and YAML format
-- Supports all versions of AsyncAPI
+- Supports AsyncAPI v2.0.0 and above
 - more coming . . .
 
 ## Class Methods
@@ -49,10 +49,9 @@ AsyncApiValidator.fromSource(path, options)
  */
 .validate(key, payload, channel, operation)
 ```
-_Note: 'channel' and 'operation' can only be used with AsyncAPI v2. Both are required with AsyncAPI v2._
 
 ### .schema
-`.schema` property can be used to access AsyncAPI schema, which is parsed into JSON, and all the refs are resolved.
+`.schema` property can be used to access AsyncAPI schema in JSON format and with all the refs resolved.
 
 ## Example usage
 Schema
@@ -132,30 +131,3 @@ validate(key, payload, channel, operation)
 That means,
 - Messages going to different operations on one channel, can have same `key`.
 - Messages going to different channels, can have same `key`
-
-## Example usage with AsyncAPI V1 (deprecated since v2.5.0)
-```js
-const AsyncApiValidator = require('asyncapi-validator')
-let va = await AsyncApiValidator.fromSource('./api.yaml')
-
-// validate 'UserDeleted' key with payload
-va.validate('UserDeleted', {
-  userId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
-  deletedBy: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
-  deletedAt: '2017-01-09T08:27:22.222Z',
-})
-
-// validate 'UserCreated' key with payload
-va.validate('UserCreated', {1:1})
-```
-For these examples to work, key `UserDeleted` and `UserCreated` must be present in such way.
-```yaml
-components:
-  messages:
-    UserDeleted:
-              ...
-              ...
-    UserCreated:
-              ...
-              ...
-```
