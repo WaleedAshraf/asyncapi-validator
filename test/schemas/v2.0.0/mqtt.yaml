@@ -1,0 +1,866 @@
+asyncapi: 2.0.0
+info:
+  title: Relayr MQTT Broker
+  version: 1.16.1
+  description: |
+
+    The **relayr** MQTT Broker allows your IoT devices to communicate with the **relayr** [Cloud](https://api-documentation.relayr.io/)
+    using the [MQTT protocol](http://mqtt.org/).
+
+    On the **relayr** broker, messages can be published with [QoS](https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels/)
+    0 or 1. The data published to the broker can be raw JSON data or compressed `gzip`
+    JSON data for all topics.
+
+    ## Requirements
+
+    ### Authorization
+
+    - [MQTT credentials](http://api-documentation.relayr.io/#tag/MQTT-Credentials-Device)
+    - [Certificate chain](https://curl.haxx.se/docs/caextract.html)
+
+    ### Tools
+
+    - Any [MQTT client](https://www.hivemq.com/blog/seven-best-mqtt-client-tools/)
+
+    
+    _Generated on {TIME_OF_GENERATION}_
+
+x-topic-separator: /
+
+servers:
+  default:
+    url: 'cloud-mqtt.relayr.io:8883'
+    description: MQTT broker
+    protocol: mqtt
+
+    security:
+      - userPass: []
+      - X509Certificate: []
+
+channels:
+  'devices/{deviceId}/measurements':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/measurements'
+  'devices/{deviceId}/alerts':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/alerts'
+  'devices/{deviceId}/commands':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    subscribe:
+      message:
+        $ref: '#/components/messages/commands'
+  'devices/{deviceId}/command_responses':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/command_responses'
+  'devices/{deviceId}/configs':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    subscribe:
+      message:
+        $ref: '#/components/messages/configs'
+  'devices/{deviceId}/config_responses':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/config_responses'
+  'devices/{deviceId}/config_requests':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/config_requests'
+  'devices/{deviceId}/installations':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    subscribe:
+      message:
+        $ref: '#/components/messages/installations'
+  'devices/{deviceId}/installation_responses':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/installation_responses'
+  'devices/{deviceId}/errors':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    subscribe:
+      message:
+        $ref: '#/components/messages/errors'
+  'devices/{deviceId}/logs':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/logs'
+  'devices/{deviceId}/locations':
+    parameters:
+      deviceId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/locations'
+  'device-groups/{deviceGroupId}/analytics_events':
+    parameters:
+      deviceGroupId:
+        schema:
+          $ref: '#/components/schemas/id'
+    publish:
+      message:
+        $ref: '#/components/messages/analytics_events'
+
+components:
+  schemas:
+    id:
+      description: Resource identifier
+      type: string
+      format: uuid
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+      example: 763c073a-e0ff-41a9-bd51-3386975ea4e3
+
+    deviceId:
+      description: Device identifier
+      $ref: '#/components/schemas/id'
+      example: d44d8a14-5fbb-4e4a-96a6-ed0c71c11fa8
+
+    deviceGroupId:
+      description: Device group identifier
+      $ref: '#/components/schemas/id'
+      example: d44d8a14-5fbb-4e4a-96a6-ed0c71c11fa8
+
+    datetime:
+      description: |
+        Date and time of the message. We don't store data with higher precision than millisecond.
+        Measurements sent for the same millisecond will overwrite each other. If it is a "number" it should be Unix timestamp in milliseconds.
+        If it is a string, it should be ISO 8601 format.
+      oneOf:
+        - type: number
+        - type: string
+
+    # measurements
+    measurement:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          $ref: '#/components/schemas/measurementName'
+        value:
+          $ref: '#/components/schemas/measurementValue'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    measurementName:
+      description: Name of the measurement defined in device-model
+      type: string
+      example: temperature
+
+    measurementValue:
+      description: Value of the measurement
+      oneOf:
+        - type: number
+        - type: boolean
+        - type: string
+      example: 36.6
+
+    # alerts
+    alert:
+      type: object
+      required:
+        - name
+        - state
+      properties:
+        name:
+          $ref: '#/components/schemas/alertName'
+        state:
+          $ref: '#/components/schemas/alertState'
+        message:
+          $ref: '#/components/schemas/alertMessage'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    alertName:
+      description: Name of the alert defined in device-model
+      type: string
+      example: temperature_high
+
+    alertState:
+      description: State of the alert (set/clear)
+      type: string
+      enum:
+        - set
+        - clear
+
+    alertMessage:
+      description: Optional alert message
+      type: string
+      example: temperature too high
+      minLength: 1
+      maxLength: 256
+
+
+    #commands
+    command:
+      type: object
+      required:
+        - deviceId
+        - id
+        - name
+        - timestamp
+      properties:
+        deviceId:
+          $ref: '#/components/schemas/deviceId'
+        id:
+          $ref: '#/components/schemas/commandId'
+        name:
+          $ref: '#/components/schemas/commandName'
+        parameter:
+          $ref: '#/components/schemas/commandParameter'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    commandResponse:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          $ref: '#/components/schemas/commandId'
+        status:
+          $ref: '#/components/schemas/commandStatus'
+        message:
+          $ref: '#/components/schemas/commandMessage'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    commandId:
+      description: Command identifier
+      $ref: '#/components/schemas/id'
+      example: 7f5bc456-21f2-4e9e-a38f-80baf762b1c5
+
+    commandName:
+      description: Name of the command defined in device-model
+      type: string
+      example: dim_light
+
+    commandParameter:
+      description: Parameter of the command (depending on device-model can be optional)
+      oneOf:
+        - type: number
+        - type: string
+        - type: boolean
+        - type: object
+        - type: array
+      example: true
+
+    commandStatus:
+      description: Command status
+      type: string
+      enum:
+        - in_progress
+        - success
+        - error
+
+    commandMessage:
+      description: Optional response message
+      type: string
+      example: message describing the command progress
+      minLength: 1
+      maxLength: 256
+
+    # configurations
+    configuration:
+      type: object
+      required:
+        - configuration
+        - version
+        - deviceId
+      properties:
+        configuration:
+          $ref: '#/components/schemas/configurationPayload'
+        version:
+          $ref: '#/components/schemas/configurationVersion'
+        deviceId:
+          $ref: '#/components/schemas/deviceId'
+
+    configurationResponse:
+      type: object
+      required:
+        - status
+        - version
+      properties:
+        status:
+          $ref: '#/components/schemas/configurationStatus'
+        version:
+          $ref: '#/components/schemas/configurationVersion'
+        message:
+          $ref: '#/components/schemas/configurationMessage'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    configurationRequest:
+      type: object
+      required:
+        - timestamp
+      properties:
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    configurationStatus:
+      description: Status of the configuration
+      type: string
+      enum:
+        - success
+        - error
+      example: error
+
+    configurationVersion:
+      description: Version of the configuration
+      type: integer
+      example: 2
+
+    configurationPayload:
+      description: Payload of the configuration (any valid JSON)
+      example:
+        maximum_temperature: 60
+
+    configurationMessage:
+      description: Optional response message
+      type: string
+      example: missing value x
+
+    # installations
+    installation:
+      type: object
+      required:
+        - deviceId
+        - id
+        - timestamp
+      properties:
+        deviceId:
+          $ref: '#/components/schemas/deviceId'
+        id:
+          $ref: '#/components/schemas/installationId'
+        type:
+          $ref: '#/components/schemas/installationType'
+        fileName:
+          $ref: '#/components/schemas/installationFile'
+        location:
+          $ref: '#/components/schemas/installationLocation'
+        signature:
+          $ref: '#/components/schemas/installationSignature'
+        signatureType:
+          $ref: '#/components/schemas/installationSignatureType'
+        size:
+          $ref: '#/components/schemas/installationSize'
+        description:
+          $ref: '#/components/schemas/installationDesc'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+        buildStamp:
+          $ref: '#/components/schemas/installationBuildStamp'
+
+    installationResponse:
+      type: object
+      required:
+        - id
+        - status
+      properties:
+        id:
+          $ref: '#/components/schemas/installationId'
+        status:
+          $ref: '#/components/schemas/installationStatus'
+        message:
+          $ref: '#/components/schemas/installationMessage'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    installationId:
+      description: Installation identifier
+      $ref: '#/components/schemas/id'
+
+    installationType:
+      description: Type of the installation file
+      type: string
+      example: gwa-core-package
+
+    installationFile:
+      description: Name of the installation file
+      type: string
+      example: gwa-core.tgz
+
+    installationLocation:
+      description: Location (url) of the installation file
+      type: string
+      example: http://foo.bar/buzz.xyz
+
+    installationSignature:
+      description: Signature of the installation file
+      type: string
+      example: 2fd4e1c67a2d28fced849ee1bb76e7391b93eb12
+
+    installationSignatureType:
+      description: Type of the file signature
+      type: string
+      example: sha-256
+
+    installationSize:
+      description: Size of the installation file (bytes)
+      type: integer
+      example: 1048576
+
+    installationDesc:
+      description: Optional file description
+      type: string
+      example: package.gwa-core-v1.1
+
+    installationStatus:
+      description: Status of the installation
+      type: string
+      enum:
+        - in_progress
+        - success
+        - error
+      example: in_progress
+
+    installationMessage:
+      description: Optional response message
+      type: string
+      example: message describing installation progress
+      minLength: 1
+      maxLength: 256
+
+    installationBuildStamp:
+      description: a build stamp of the software to be installed
+      type: string
+
+    # errors
+    error:
+      type: object
+      required:
+        - error
+        - topic
+        - payload
+        - messageId
+      properties:
+        error:
+          $ref: '#/components/schemas/errorContent'
+        topic:
+          $ref: '#/components/schemas/errorTopic'
+        payload:
+          $ref: '#/components/schemas/errorPayload'
+        messageId:
+          $ref: '#/components/schemas/errorMessageId'
+
+    errorContent:
+      description: Human-readable error message
+      type: string
+      example: command field 'id' is NOT an UUID
+
+    errorTopic:
+      description: Topic to which the malformed message was sent
+      type: string
+      example: devices/763c073a-e0ff-41a9-bd51-3386975ea4e3/commands
+
+    errorPayload:
+      description: Payload of the message that caused the error (stringified)
+      type: string
+      example: '{''id'':''not UUID'',''status'':''in_progress''}'
+
+    errorMessageId:
+      description: Id of the message (for tracking purposes)
+      type: integer
+      example: 31248
+
+    log:
+      type: object
+      required:
+        - level
+        - message
+      properties:
+        level:
+          $ref: '#/components/schemas/logLevel'
+        message:
+          $ref: '#/components/schemas/logMessage'
+        timestamp:
+          $ref: '#/components/schemas/datetime'
+
+    logLevel:
+      description: |
+        Level of log severity (0 - 5)
+        5 = trace
+        4 = debug
+        3 = minor
+        2 = major
+        1 = error
+        0 = critical
+      type: integer
+      minimum: 0
+      maximum: 5
+      example: 2
+
+    logMessage:
+      description: Log message
+      type: string
+      example: Device has been restarted
+
+    anomalyScore:
+      type: object
+      required:
+        - score
+        - deviceFeatureVectorTime
+        - deviceGroupId
+        - phaseName
+        - attributeImportance
+        - anomalyRegions
+      additionalProperties: false
+      properties:
+        score:
+          description: The raw anomaly score of the edge event. 
+            The higher the score, the more anomalous the event. 
+            The score can, but does not have to be normalized to the range [0,1]. 
+            If the anomaly score is not normalized to [0,1], we can normalize the score in the cloud using a `ScoreNormalizer` in the `analytics-event-service`.
+          type: number
+        totalNumberOfContributors:
+          description: The total number of contributors (ie features) that were considered by the anomaly model, 
+            not only the N most important ones that are directly reported.
+          type: number
+          minimum: 0
+        attributeImportance:
+          type: object
+          description: A list of features and their respective importances. 
+            This is a measure of the relative "importance" of each of the features used by the model. 
+            Each feature is assigned a percentage weighting of how much it contributed to the anomaly score. 
+            In the above example, the model has thus determined that one feature is 90% responsible for the current anomaly, 
+            and another feature for the remaining 10%. All attributeImportances sum up to 1.0. 
+            The list of attributeImportances is truncated to the N most important features, where N is configurable.
+          required:
+            - rawFeatures
+            - engineeredFeatures
+          properties:
+            rawFeatures:
+              type: object
+              description: A mapping between features' names and their respective importances, grouped by respective device ids.
+            engineeredFeatures:
+              type: object
+              description: A mapping between features' names and their respective importances.
+        anomalyRegions:
+          description: Represents the models interpretation of the most likely range of values it expects to find for that particular feature. 
+            Provided for each of the N most important features. 
+            The `min` and `max` determines the lower and upper bounds of the encoded anomaly region, 
+            and the `values` list represents equally spaced buckets over that range. 
+            The values themselves represent the relative expectation of finding the feature within this region. 
+            The lower the value, the higher is the probability to find the value in that bucket. 
+            In other words, the values array encodes an inverse probability distribution. 
+            Observing a feature value outside the range [`min`, `max`] always corresponds to an anomalous feature.  
+            The `featureValue` encodes the actual value of the feature when the event was created.
+          type: object
+          required:
+            - rawFeatures
+            - engineeredFeatures
+          properties:
+            rawFeatures:
+              type: object
+              description: A mapping between features' names and their respective anomaly regions, grouped by respective device ids.
+            engineeredFeatures:
+              type: object
+              description: A mapping between features' names and their respective anomaly regions.
+        deviceFeatureVectorTime:
+          description: The timestamp of the event, ie when the event was created.
+          $ref: '#/components/schemas/datetime'
+        deviceGroupId:
+          description: The cloud2.0 deviceGroupId to which this `anomaly event` belongs.
+          $ref: '#/components/schemas/deviceGroupId'
+        phaseName:
+          description: Most systems operate in multiple states or phases, the most simple example being on and off. Take for example a coffee machine, this can have multiple different phases such as grinding beans, boiling water, extracting coffee, frothing milk etc.. For the purposes of analytics and machine learning, attempting to build a model to detect anomalies or specific behaviours across all of those drastically different phases is not a simple task. A more reliable approach would be to create one more specifically taylored model to detect problems in each of the phases. The `phaseName` is a string that is used to differentiate those phases.
+          type: string
+          minLength: 1
+          maxLength: 64
+
+    MQTTQoSHeader:
+      type: number
+      format: int32
+      description: Quality of Service (0 - 1)
+      enum:
+        - 1
+        - 0
+
+  securitySchemes:
+    userPass:
+      type: userPassword
+      description: |
+        Username and password obtained from the **Cloud** [MQTT endpoints](http://api-documentation.relayr.io/#tag/MQTT-Credentials-Device)
+    X509Certificate:
+      type: X509
+      description: |
+        X.509 Certificate
+
+  messages:
+
+    locations:
+      name: devices/locations
+      summary: Location of the device
+      description: Device location is received from the device through MQTT and published to Kafka. Location service receives the Kafka message and updates the device location.
+      tags:
+        - name: location
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+      payload:
+        type: array
+        items:
+          type: object
+          properties:
+            latitude:
+              description: number of degrees north
+              type: number
+              minimum: -90
+              maximum: 90
+            longitude:
+              description: number of degrees east
+              type: number
+              minimum: -180
+              maximum: 180
+            address:
+              description: address of device location
+              type: string
+              maxLength: 200
+            zipCode:
+              description: zipCode of device location
+              type: string
+            city:
+              description: city of device location
+              type: string
+            country:
+              description: Country code from ISO 3166-1 alpha-2 standard
+              type: string
+              example: UA
+            timestamp:
+              $ref: '#/components/schemas/datetime'
+          required:
+            - longitude
+            - latitude
+          additionalProperties: false
+
+    measurements:
+      name: devices/measurements
+      summary: Publish measurement(s)
+      description: |
+        Measurements are sent in an array which contains one or more measurements
+        for a single device. Measurements **must** be defined in the [device model version](http://api-documentation.relayr.io/#tag/Device-Models/paths/~1device-models~1{modelId}~1versions/post).
+      tags:
+        - name: measurements
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/measurement'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    alerts:
+      name: devices/alerts
+      summary: Publish alert(s)
+      tags:
+        - name: alerts
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/alert'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    commands:
+      name: devices/commands
+      description: |
+        Commands can be sent and executed on devices through the **Cloud** command import [endpoint](http://api-documentation.relayr.io/#tag/Commands-Import-HTTP)
+        and command execution [endpoint](http://api-documentation.relayr.io/#tag/Commands-Execution-HTTP).
+      summary: Subscribe to device commands
+      tags:
+        - name: commands
+      payload:
+        $ref: '#/components/schemas/command'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    command_responses:
+      name: devices/command_responses
+      summary: Publish command response(s)
+      tags:
+        - name: commands
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/commandResponse'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    configs:
+      name: devices/configs
+      description: |
+        Configurations can be sent to devices through the **Cloud** configuration [endpoints](http://services-docs.relayr.io/ext-api/#tag/Device-configurations/paths/~1devices~1{deviceId}~1configurations/post).
+      summary: Subscribe to device configurations
+      tags:
+        - name: configurations
+      payload:
+        $ref: '#/components/schemas/configuration'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    config_responses:
+      name: devices/config_responses
+      summary: Publish configuration response(s)
+      tags:
+        - name: configurations
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/configurationResponse'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    config_requests:
+      name: devices/config_requests
+      summary: Publish configuration request
+      tags:
+        - name: configurations
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/configurationRequest'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    installations:
+      name: devices/installations
+      description: |
+        Installations can be sent to devices through the **Cloud** software installation [endpoints](http://api-documentation.relayr.io/#tag/Software-Installation-Device).
+      summary: Subscribe to device installations
+      tags:
+        - name: installations
+      payload:
+        $ref: '#/components/schemas/installation'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    installation_responses:
+      name: devices/installation_responses
+      summary: Publish configuration response(s)
+      tags:
+        - name: installations
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/installationResponse'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    errors:
+      name: devices/errors
+      description: |
+        When malformed message is published it will be filtered out and rejected. \
+        Reason for rejection can be obtained from the **/errors** topic.
+      summary: Subscribe to device errors
+      tags:
+        - name: errors
+      payload:
+        $ref: '#/components/schemas/error'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    logs:
+      name: devices/logs
+      summary: Publish device log(s)
+      tags:
+        - name: logs
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/log'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
+
+    analytics_events:
+      name: device-groups/analytics_events
+      summary: Publish analytics events
+      tags:
+        - name: analytics events
+      payload:
+        type: array
+        items:
+          $ref: '#/components/schemas/anomalyScore'
+      headers:
+        type: object
+        properties:
+          qos:
+            $ref: '#/components/schemas/MQTTQoSHeader'
