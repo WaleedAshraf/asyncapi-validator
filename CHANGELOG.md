@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 3.0.0 *(2020-11-15)*
+----------------------------
+#### Breaking:
+* Remove support for AsyncAPI Schema v1.2.0
+* Remove `._schema` property from instance. Use `.schema` instead.
+#### New / Improvements:
+* `channel`, `operation` and `options.msgIdentifier` are required for validation.
+* Add support for OpenAPI formats
+* Using @asyncapi/openapi-schema-parser and @asyncapi/parser
+
 Version 2.5.0 *(2020-10-03)*
 ----------------------------
 * Provide `.schema` property on instance, to access ref resolved JSON schema.

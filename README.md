@@ -87,7 +87,7 @@ va.validate('UserDeleted', {
   userEmail: 'alex@mail.com',
 }, 'user-events', 'publish')
 ```
-In above example, `"msgIdentifier"` is `"x-custom-key"`. That's why, `"UserDeleted"` is used `"key"` in `"va.validate()"`
+In above example, `"msgIdentifier"` is `"x-custom-key"`. That is why, `"UserDeleted"` is used as `"key"` in `"va.validate()"` method.
 
 ## Errors
 Error thrown from asyncapi-validator will have these properties.
