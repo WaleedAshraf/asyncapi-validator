@@ -1,9 +1,8 @@
-const fs = require('fs')
 const asyncapiParser = require('@asyncapi/parser')
 const openapiSchemaParser = require('@asyncapi/openapi-schema-parser')
 const {promisify} = require('util')
+const readFile = promisify(require('fs').readFile)
 const ValidationError = require('./ValidationError')
-const readFile = promisify(fs.readFile)
 
 class Parser {
   /**
@@ -23,6 +22,9 @@ class Parser {
     }
   }
 
+  /**
+   * @param {{ title: any; message: any; detail: any; validationErrors: any[]; }} err
+   */
   _formatError(err) {
     const title = err.title || err.message
     let details = 'Error Details: '

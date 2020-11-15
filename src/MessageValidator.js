@@ -1,6 +1,9 @@
 const Ajv = require('ajv')
 const ValidationError = require('./ValidationError')
 
+// openapi formats are handled by the Parser using @asyncapi/openapi-schema-parser
+const openapiFormats = ['int32', 'int64', 'float', 'double', 'byte']
+
 class MessageValidator {
   /**
    * @param {object} schema - user defined AsyncApi Schema
@@ -11,7 +14,7 @@ class MessageValidator {
     this.schema = schema
     this._messages = this.schema.components ? this.schema.components.messages : []
     this._channels = channels
-    this._ajv = new Ajv({allErrors: true, unknownFormats: ['int32', 'int64', 'float', 'double', 'byte']})
+    this._ajv = new Ajv({allErrors: true, unknownFormats: openapiFormats})
     this._options = options
   }
 
@@ -35,6 +38,11 @@ class MessageValidator {
     return true
   }
 
+  /**
+   * @param {string} key
+   * @param {string | number} channel
+   * @param {string} operation
+   */
   _validateArgs(key, channel, operation) {
     if (!operation || !(operation === 'publish' || operation === 'subscribe')) {
       throw new ValidationError(`operation "${operation}" is not valid`)
@@ -49,6 +57,10 @@ class MessageValidator {
     }
   }
 
+  /**
+   * @param {{ type: string; }} payloadSchema
+   * @param {any} payload
+   */
   _shouldHandleArray(payloadSchema, payload) {
     const shouldIgnoreArray = this._options.ignoreArray === true
     const schemaIsArray = payloadSchema.type === 'array'
