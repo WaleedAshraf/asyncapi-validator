@@ -1,7 +1,5 @@
-const asyncapiSchemas = require('asyncapi')
 const ValidationError = require('./ValidationError')
 const MessageValidator = require('./MessageValidator')
-const SchemaValidator = require('./SchemaValidator')
 const Parser = require('./Parser')
 
 function ValidatorFactory() {
@@ -11,17 +9,8 @@ function ValidatorFactory() {
    * @returns {Promise<MessageValidator>}
    */
   this.fromSource = async (source, options = {}) => {
-    const schema = await Parser.parse(source)
-    const asyncapiVersion = schema.asyncapi
-    const asyncapiSchema = asyncapiSchemas[asyncapiVersion]
-    let channels = null
-
-    SchemaValidator.validate(schema, asyncapiSchema)
-
-    if (options.msgIdentifier) {
-      channels = constructsChannels(schema, options.msgIdentifier)
-    }
-
+    const {_json: schema} = await Parser.parse(source)
+    const channels = constructsChannels(schema, options.msgIdentifier)
     return new MessageValidator(schema, options, channels)
   }
 }
@@ -32,6 +21,10 @@ function ValidatorFactory() {
  */
 const constructsChannels = (schema, msgIdentifier) => {
   const channels = {}
+  if (!msgIdentifier) {
+    throw new ValidationError('"msgIdentifier" is required')
+  }
+
   Object.keys(schema.channels).forEach(c => {
     const publish = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
     const subscribe = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
