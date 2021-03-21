@@ -4,7 +4,7 @@
 
 message validator through asyncapi schema
 
-_Note: This package only support AsyncAPI Schema v2.0.0 or above. Since v3.0.0, support for AsyncAPI Schema v1.0.2 has been removed.
+_Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0, support for older versions of AsyncAPI Schema has been removed.
 
 `npm i asyncapi-validator`
 
@@ -119,7 +119,7 @@ Error thrown from asyncapi-validator will have these properties.
 
 ## How it works
 asyncapi-validator validates the payload of the messages of a certain message, as described in your schema document. To validate against
-a certain message, it needs to find the message are you pointing to in schema document. For that, you need to pass it `channel`, `operation`, and `key` of the message.
+a certain message, it needs to find the message are you pointing to in schema document. For that, you need to pass it `key`, `channel`, and `operation` of the message.
 
 ```js
 validate(key, payload, channel, operation)
