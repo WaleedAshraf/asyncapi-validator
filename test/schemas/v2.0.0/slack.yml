@@ -126,6 +126,7 @@ components:
 
   messages:
     hello:
+      name: hello
       summary: 'First event received upon connection.'
       payload:
         type: object
@@ -135,6 +136,7 @@ components:
             enum:
               - hello
     connectionError:
+      name: connectionError
       summary: 'Event received when a connection error happens.'
       payload:
         type: object
@@ -151,6 +153,7 @@ components:
               msg:
                 type: string
     accountsChanged:
+      name: accountsChanged
       summary: 'The list of accounts a user is signed into has changed.'
       payload:
         type: object
@@ -160,6 +163,7 @@ components:
             enum:
               - accounts_changed
     botAdded:
+      name: botAdded
       summary: 'A bot user was added.'
       payload:
         type: object
@@ -182,6 +186,7 @@ components:
                 additionalProperties:
                   type: string
     botChanged:
+      name: botChanged
       summary: 'A bot user was changed.'
       payload:
         type: object
@@ -204,6 +209,7 @@ components:
                 additionalProperties:
                   type: string
     channelArchive:
+      name: channelArchive
       summary: 'A channel was archived.'
       payload:
         type: object
@@ -217,6 +223,7 @@ components:
           user:
             type: string
     channelCreated:
+      name: channelArchive
       summary: 'A channel was created.'
       payload:
         type: object
@@ -237,6 +244,7 @@ components:
               creator:
                 type: string
     channelDeleted:
+      name: channelDeleted
       summary: 'A channel was deleted.'
       payload:
         type: object
@@ -248,6 +256,7 @@ components:
           channel:
             type: string
     channelHistoryChanged:
+      name: channelHistoryChanged
       summary: 'Bulk updates were made to a channel''s history.'
       payload:
         type: object
@@ -263,6 +272,7 @@ components:
           event_ts:
             type: string
     channelJoined:
+      name: channelJoined
       summary: 'You joined a channel.'
       payload:
         type: object
@@ -283,6 +293,7 @@ components:
               creator:
                 type: string
     channelLeft:
+      name: channelLeft
       summary: 'You left a channel.'
       payload:
         type: object
@@ -294,6 +305,7 @@ components:
           channel:
             type: string
     channelMarked:
+      name: channelMarked
       summary: 'Your channel read marker was updated.'
       payload:
         type: object
@@ -307,6 +319,7 @@ components:
           ts:
             type: string
     channelRename:
+      name: channelRename
       summary: 'A channel was renamed.'
       payload:
         type: object
@@ -325,6 +338,7 @@ components:
               created:
                 type: number
     channelUnarchive:
+      name: channelUnarchive
       summary: 'A channel was unarchived.'
       payload:
         type: object
@@ -338,6 +352,7 @@ components:
           user:
             type: string
     commandsChanged:
+      name: commandsChanged
       summary: 'A slash command has been added or changed.'
       payload:
         type: object
@@ -349,6 +364,7 @@ components:
           event_ts:
             type: string
     dndUpdated:
+      name: dndUpdated
       summary: 'Do not Disturb settings changed for the current user.'
       payload:
         type: object
@@ -373,6 +389,7 @@ components:
               snooze_endtime:
                 type: number
     dndUpdatedUser:
+      name: dndUpdatedUser
       summary: 'Do not Disturb settings changed for a member.'
       payload:
         type: object
@@ -393,6 +410,7 @@ components:
               next_dnd_end_ts:
                 type: number
     emailDomainChanged:
+      name: emailDomainChanged
       summary: 'The workspace email domain has changed.'
       payload:
         type: object
@@ -406,6 +424,7 @@ components:
           event_ts:
             type: string
     emojiRemoved:
+      name: emojiRemoved
       summary: 'A custom emoji has been removed.'
       payload:
         type: object
@@ -425,6 +444,7 @@ components:
           event_ts:
             type: string
     emojiAdded:
+      name: emojiAdded
       summary: 'A custom emoji has been added.'
       payload:
         type: object
@@ -445,6 +465,7 @@ components:
           event_ts:
             type: string
     fileChange:
+      name: fileChange
       summary: 'A file was changed.'
       payload:
         type: object
@@ -461,6 +482,7 @@ components:
               id:
                 type: string
     fileCommentAdded:
+      name: fileCommentAdded
       summary: 'A file comment was added.'
       payload:
         type: object
@@ -478,6 +500,7 @@ components:
               id:
                 type: string
     fileCommentDeleted:
+      name: fileCommentDeleted
       summary: 'A file comment was deleted.'
       payload:
         type: object
@@ -496,6 +519,7 @@ components:
               id:
                 type: string
     fileCommentEdited:
+      name: fileCommentEdited
       summary: 'A file comment was edited.'
       payload:
         type: object
@@ -513,6 +537,7 @@ components:
               id:
                 type: string
     fileCreated:
+      name: fileCreated
       summary: 'A file was created.'
       payload:
         type: object
@@ -529,6 +554,7 @@ components:
               id:
                 type: string
     fileDeleted:
+      name: fileDeleted
       summary: 'A file was deleted.'
       payload:
         type: object
@@ -542,6 +568,7 @@ components:
           event_ts:
             type: string
     filePublic:
+      name: filePublic
       summary: 'A file was made public.'
       payload:
         type: object
@@ -558,6 +585,7 @@ components:
               id:
                 type: string
     fileShared:
+      name: fileShared
       summary: 'A file was shared.'
       payload:
         type: object
@@ -574,6 +602,7 @@ components:
               id:
                 type: string
     fileUnshared:
+      name: fileUnshared
       summary: 'A file was unshared.'
       payload:
         type: object
@@ -590,6 +619,7 @@ components:
               id:
                 type: string
     goodbye:
+      name: goodbye
       summary: 'The server intends to close the connection soon.'
       payload:
         type: object
@@ -599,6 +629,7 @@ components:
             enum:
               - goodbye
     groupArchive:
+      name: groupArchive
       summary: 'A private channel was archived.'
       payload:
         type: object
@@ -610,6 +641,7 @@ components:
           channel:
             type: string
     groupClose:
+      name: groupClose
       summary: 'You closed a private channel.'
       payload:
         type: object
@@ -623,6 +655,7 @@ components:
           channel:
             type: string
     groupHistoryChanged:
+      name: groupHistoryChanged
       summary: 'Bulk updates were made to a private channel''s history.'
       payload:
         type: object
@@ -638,6 +671,7 @@ components:
           event_ts:
             type: string
     groupJoined:
+      name: groupJoined
       summary: 'You joined a private channel.'
       payload:
         type: object
@@ -658,6 +692,7 @@ components:
               creator:
                 type: string
     groupLeft:
+      name: groupLeft
       summary: 'You left a private channel.'
       payload:
         type: object
@@ -669,6 +704,7 @@ components:
           channel:
             type: string
     groupMarked:
+      name: groupMarked
       summary: 'A private channel read marker was updated.'
       payload:
         type: object
@@ -682,6 +718,7 @@ components:
           ts:
             type: string
     groupOpen:
+      name: groupOpen
       summary: 'You opened a private channel.'
       payload:
         type: object
@@ -695,6 +732,7 @@ components:
           channel:
             type: string
     groupRename:
+      name: groupRename
       summary: 'A private channel was renamed.'
       payload:
         type: object
@@ -713,6 +751,7 @@ components:
               created:
                 type: number
     groupUnarchive:
+      name: groupUnarchive
       summary: 'A private channel was unarchived.'
       payload:
         type: object
@@ -726,6 +765,7 @@ components:
           user:
             type: string
     imClose:
+      name: imClose
       summary: 'You closed a DM.'
       payload:
         type: object
@@ -739,6 +779,7 @@ components:
           user:
             type: string
     imCreated:
+      name: imCreated
       summary: 'A DM was created.'
       payload:
         type: object
@@ -761,6 +802,7 @@ components:
           user:
             type: string
     imMarked:
+      name: imMarked
       summary: 'A direct message read marker was updated.'
       payload:
         type: object
@@ -774,6 +816,7 @@ components:
           ts:
             type: string
     imOpen:
+      name: imOpen
       summary: 'You opened a DM.'
       payload:
         type: object
@@ -787,6 +830,7 @@ components:
           user:
             type: string
     manualPresenceChange:
+      name: manualPresenceChange
       summary: 'You manually updated your presence.'
       payload:
         type: object
@@ -798,6 +842,7 @@ components:
           presence:
             type: string
     memberJoinedChannel:
+      name: memberJoinedChannel
       summary: 'A user joined a public or private channel.'
       payload:
         type: object
@@ -820,6 +865,7 @@ components:
           inviter:
             type: string
     memberLeftChannel:
+      name: memberLeftChannel
       summary: 'A user left a public or private channel.'
       payload:
         type: object
@@ -840,6 +886,7 @@ components:
           team:
             type: string
     message:
+      name: message
       summary: 'A message was sent to a channel.'
       payload:
         type: object
@@ -868,6 +915,7 @@ components:
               ts:
                 type: string
     outgoingMessage:
+      name: outgoingMessage
       summary: 'A message was sent to a channel.'
       payload:
         type: object
