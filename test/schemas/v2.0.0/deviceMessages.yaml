@@ -32,6 +32,7 @@ components:
       name: DeviceInstallationResponsePublished
       title: DeviceInstallationResponsePublished
       summary: Device Installation Response Published
+      schemaFormat: 'application/vnd.oai.openapi;version=3.0.0'
       payload:
         $ref: '#/components/schemas/DeviceInstallationResponsePublished'
 
@@ -69,6 +70,7 @@ components:
                 - deviceId
                 - id
                 - status
+              additionalProperties: false
               properties:
                 deviceId:
                   $ref: '#/components/schemas/UUID'
@@ -78,6 +80,21 @@ components:
                   $ref: '#/components/schemas/TaskStatus'
                 message:
                   type: string
+                temperature:
+                  type: integer
+                  format: int32
+                vibration:
+                  type: integer
+                  format: int64
+                floatType:
+                  type: number
+                  format: float
+                doubleType:
+                  type: number
+                  format: double
+                byteType:
+                  type: string
+                  format: byte
 
     # ----------------- OTHER schemas -------------------
     Timestamp:
