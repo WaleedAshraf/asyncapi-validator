@@ -22,11 +22,11 @@ _Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0,
 ```js
 /** 
  * Load and Parse the schema from source.
- * @param {string} path - local PATH or URL of schema
+ * @param {string | Object} source - local PATH or URL of schema or schema Object
  * @param {Object} options - options for validation
  * @returns {Promise}
  */
-AsyncApiValidator.fromSource(path, options)
+AsyncApiValidator.fromSource(source, options)
 ```
 
 #### Options

@@ -15,6 +15,10 @@ class Parser {
       if (source.indexOf('https://') === 0 || source.indexOf('http://') === 0) {
         return await asyncapiParser.parseFromUrl(source)
       }
+      if (source instanceof Object) {
+        // Source could be an object (instead of JSON / YAML string.)
+        return await asyncapiParser.parse(source);
+      }
       const file = await readFile(source, 'utf8')
       return await asyncapiParser.parse(file)
     } catch (err) {
