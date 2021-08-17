@@ -1,3 +1,4 @@
+const fs = require('fs')
 const mocks = require('../mocks')
 const AsyncApiValidator = require('../../index')
 const assert = require('assert')
@@ -98,5 +99,10 @@ describe('factory', () => {
 
   it('should parse JSON schema', async () => {
     await assert.doesNotReject(AsyncApiValidator.fromSource('./test/schemas/jsonSchema.json', {msgIdentifier: 'name'}))
+  })
+
+  it('should accept a javascript Object as schema', async () => {
+    const schema = JSON.parse(fs.readFileSync('./test/schemas/jsonSchema.json'))
+    await assert.doesNotReject(AsyncApiValidator.fromSource(schema, {msgIdentifier: 'name'}))
   })
 })

@@ -12,6 +12,10 @@ class Parser {
   async parse(source) {
     try {
       asyncapiParser.registerSchemaParser(openapiSchemaParser)
+      if (source instanceof Object) {
+        // Source could be an object (instead of JSON / YAML string.)
+        return await asyncapiParser.parse(source)
+      }
       if (source.indexOf('https://') === 0 || source.indexOf('http://') === 0) {
         return await asyncapiParser.parseFromUrl(source)
       }
