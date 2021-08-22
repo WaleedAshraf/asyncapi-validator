@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 3.1.0 *(2021-08-22)*
+----------------------------
+* Add support for deserialized objects as source
+
 Version 3.0.0 *(2021-03-20)*
 ----------------------------
 ### Breaking:
