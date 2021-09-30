@@ -5,11 +5,14 @@ const Parser = require('./Parser')
 function ValidatorFactory() {
   /**
    * @param {string} source
-   * @param {{ msgIdentifier?: string ; ignoreArray?: boolean }} options
+   * @param {{ msgIdentifier: string ; ignoreArray?: boolean }} options
    * @returns {Promise<MessageValidator>}
    */
-  this.fromSource = async (source, options = {}) => {
+  this.fromSource = async (source, options) => {
     const {_json: schema} = await Parser.parse(source)
+    if (!options || !options.msgIdentifier) {
+      throw new ValidationError('"msgIdentifier" is required')
+    }
     const channels = constructsChannels(schema, options.msgIdentifier)
     return new MessageValidator(schema, options, channels)
   }
@@ -21,9 +24,6 @@ function ValidatorFactory() {
  */
 const constructsChannels = (schema, msgIdentifier) => {
   const channels = {}
-  if (!msgIdentifier) {
-    throw new ValidationError('"msgIdentifier" is required')
-  }
 
   Object.keys(schema.channels).forEach(c => {
     const publish = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)

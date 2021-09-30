@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 3.1.1 *(2021-09-30)*
+----------------------------
+* Add TS types
+* Fix JSDocs for `fromSource()`
+
 Version 3.1.0 *(2021-08-22)*
 ----------------------------
 * Add support for deserialized objects as source
