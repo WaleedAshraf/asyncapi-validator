@@ -5,7 +5,7 @@ declare module 'asyncapi-validator' {
       payload: unknown,
       channel: string,
       operation: 'publish' | 'subscribe',
-    ) => void;
+    ) => boolean;
   };
 
   const fromSource: (
