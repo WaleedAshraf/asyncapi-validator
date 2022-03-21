@@ -34,6 +34,7 @@ AsyncApiValidator.fromSource(source, options)
 |-----|----|----|---|
 | ignoreArray | boolean | optional | If `true`, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
 | msgIdentifier | string | required | Name of parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+| path | string | optional |  Path to the AsyncAPI document. It will be used to resolve relative references. Defaults to current working dir. As [used in asyncapi-parser](https://github.com/asyncapi/parser-js/blob/master/lib/parser.js#L41) |
 
 ## Instance Methods
 

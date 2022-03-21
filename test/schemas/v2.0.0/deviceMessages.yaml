@@ -27,7 +27,7 @@ components:
       title: DeviceInstallationPublished
       summary: Device Installation Published
       payload:
-        $ref: '#/components/schemas/DeviceInstallationPublished'
+        $ref: 'DeviceInstallationPublished.yaml#/components/schemas/DeviceInstallationPublished'
     DeviceInstallationResponsePublished:
       name: DeviceInstallationResponsePublished
       title: DeviceInstallationResponsePublished
@@ -37,28 +37,6 @@ components:
         $ref: '#/components/schemas/DeviceInstallationResponsePublished'
 
   schemas:
-    DeviceInstallationPublished:
-      allOf:
-        - $ref: '#/components/schemas/BasicKafkaEnvelope'
-        - type: object
-          properties:
-            data:
-              type: object
-              required:
-                - deviceId
-                - id
-                - received
-                - recorded
-              properties:
-                deviceId:
-                  $ref: '#/components/schemas/UUID'
-                id:
-                  $ref: '#/components/schemas/UUID'
-                received:
-                  $ref: '#/components/schemas/Timestamp'
-                recorded:
-                  $ref: '#/components/schemas/Timestamp'
-
     DeviceInstallationResponsePublished:
       allOf:
         - $ref: '#/components/schemas/BasicKafkaEnvelope'

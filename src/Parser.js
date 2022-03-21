@@ -7,9 +7,11 @@ const ValidationError = require('./ValidationError')
 class Parser {
   /**
    * @param {string} source
+   * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} options
    * @returns {Promise} ref resolved schema object
    */
-  async parse(source) {
+  async parse(source, options) {
+    const defaultConfig = options && options.path ? {path: options.path} : {}
     try {
       asyncapiParser.registerSchemaParser(openapiSchemaParser)
       if (source instanceof Object) {
@@ -20,7 +22,7 @@ class Parser {
         return await asyncapiParser.parseFromUrl(source)
       }
       const file = await readFile(source, 'utf8')
-      return await asyncapiParser.parse(file)
+      return await asyncapiParser.parse(file, defaultConfig)
     } catch (err) {
       throw new ValidationError(this._formatError(err), undefined, err.validationErrors)
     }

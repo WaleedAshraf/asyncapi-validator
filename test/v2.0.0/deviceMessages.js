@@ -3,7 +3,8 @@ const AsyncApiValidator = require('../../index')
 describe('deviceMessages', () => {
   let validator
   beforeEach(async () => {
-    validator = await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/deviceMessages.yaml', {msgIdentifier: 'name'})
+    validator = await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/deviceMessages.yaml',
+      {msgIdentifier: 'name', path: './test/schemas/v2.0.0/'})
   })
 
   it('should throw error - channel not found', () => {
