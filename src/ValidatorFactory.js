@@ -5,11 +5,11 @@ const Parser = require('./Parser')
 function ValidatorFactory() {
   /**
    * @param {string} source
-   * @param {{ msgIdentifier: string ; ignoreArray?: boolean }} options
+   * @param {{ msgIdentifier: string ; ignoreArray?: boolean ; path?: string }} options
    * @returns {Promise<MessageValidator>}
    */
   this.fromSource = async (source, options) => {
-    const {_json: schema} = await Parser.parse(source)
+    const {_json: schema} = await Parser.parse(source, options)
     if (!options || !options.msgIdentifier) {
       throw new ValidationError('"msgIdentifier" is required')
     }

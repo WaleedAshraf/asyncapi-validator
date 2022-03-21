@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 3.2.0 *(2022-03-22)*
+----------------------------
+* Option to provide `path` parameter for relative file ref.
+
 Version 3.1.1 *(2021-09-30)*
 ----------------------------
 * Add TS types

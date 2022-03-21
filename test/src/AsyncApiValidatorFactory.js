@@ -43,7 +43,7 @@ describe('factory', () => {
 
   it('should throw error - msgIdentifier does not exist for one-of message', async () => {
     try {
-      await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/deviceMessages.yaml', {msgIdentifier: 'hello'})
+      await AsyncApiValidator.fromSource('./test/schemas/v2.0.0/deviceMessages.yaml', {msgIdentifier: 'hello', path: './test/schemas/v2.0.0/'})
     } catch (e) {
       expect(e.message).toBe('msgIdentifier "hello" does not exist')
     }
