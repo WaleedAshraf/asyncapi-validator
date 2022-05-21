@@ -1,6 +1,18 @@
 Change Log
 ==========
 
+Version 4.0.0 *(2022-05-22)*
+----------------------------
+### Breaking:
+* "should" replaced with "must" in the error messages, as per [in AJV](https://github.com/ajv-validator/ajv/blob/master/docs/v6-to-v8-migration.md#new-features)
+
+### New / Improvements:
+* Support AsyncAPI schema v2.4.0
+* Added `validateByMessageId()` method, which only requires `key` and `value`. To use this method, your AsyncAPI schema should be >= 2.4.0
+* `msgIdentifier` option is only required if you use `.validate()` method.
+* You can use both `validateByMessageId()` and `validate()` methods if your AsyncAPI schema version is >= 2.4.0
+* Start using `ajv-formats` for custom formats.
+
 Version 3.2.0 *(2022-03-22)*
 ----------------------------
 * Option to provide `path` parameter for relative file ref.

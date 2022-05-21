@@ -1,20 +1,18 @@
-const ValidationError = require('./ValidationError')
 const MessageValidator = require('./MessageValidator')
 const Parser = require('./Parser')
+const messageId = 'messageId'
 
 function ValidatorFactory() {
   /**
-   * @param {string} source
-   * @param {{ msgIdentifier: string ; ignoreArray?: boolean ; path?: string }} options
-   * @returns {Promise<MessageValidator>}
+   * Load schema from provided source
+   * @param {String} source - source
+   * @param {Object} options - options
+   * @returns MessageValidator
    */
-  this.fromSource = async (source, options) => {
+  this.fromSource = async (source, options = {}) => {
     const {_json: schema} = await Parser.parse(source, options)
-    if (!options || !options.msgIdentifier) {
-      throw new ValidationError('"msgIdentifier" is required')
-    }
-    const channels = constructsChannels(schema, options.msgIdentifier)
-    return new MessageValidator(schema, options, channels)
+    const {channels, messagesWithId} = constructsChannels(schema, options.msgIdentifier)
+    return new MessageValidator(schema, options, channels, messagesWithId)
   }
 }
 
@@ -24,41 +22,43 @@ function ValidatorFactory() {
  */
 const constructsChannels = (schema, msgIdentifier) => {
   const channels = {}
+  let messagesWithId = {}
 
   Object.keys(schema.channels).forEach(c => {
-    const publish = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
-    const subscribe = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
-
+    const {msgsForOp: publish, msgsForId: msgsForIdPub} = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
+    const {msgsForOp: subscribe, msgsForId: msgsForIdSub} = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
     channels[c] = {publish, subscribe}
+    messagesWithId = {
+      ...messagesWithId,
+      ...msgsForIdPub,
+      ...msgsForIdSub
+    }
   })
-  return channels
+  return {channels, messagesWithId}
 }
 
 /**
  * @param {{ [x in 'publish' | 'subscribe' | undefined]: { message: any; }; }} channel
  * @param {'publish' | 'subscribe'} operation
  * @param {string} msgIdentifier
- * @returns {Object} messages
+ * @returns {Object} {msgsForOp, msgsForId}
  */
 const getMessagesForOperation = (channel, operation, msgIdentifier) => {
-  const messages = {}
+  const msgsForOp = {}
+  const msgsForId = {}
   if (channel[operation]) {
     if (channel[operation].message.oneOf) {
       channel[operation].message.oneOf.forEach(m => {
-        if (!m[msgIdentifier]) {
-          throw new ValidationError(`msgIdentifier "${msgIdentifier}" does not exist`, null, JSON.stringify(m))
-        }
-        messages[m[msgIdentifier]] = m
+        if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
+        if (m[messageId]) msgsForId[m[messageId]] = m
       })
     } else {
       const tempMsg = channel[operation].message
-      if (!tempMsg[msgIdentifier]) {
-        throw new ValidationError(`msgIdentifier "${msgIdentifier}" does not exist`, null, JSON.stringify(tempMsg))
-      }
-      messages[tempMsg[msgIdentifier]] = tempMsg
+      if (tempMsg[msgIdentifier]) msgsForOp[tempMsg[msgIdentifier]] = tempMsg
+      if (tempMsg[messageId]) msgsForId[tempMsg[messageId]] = tempMsg
     }
   }
-  return messages
+  return {msgsForOp, msgsForId}
 }
 
 module.exports = new ValidatorFactory()

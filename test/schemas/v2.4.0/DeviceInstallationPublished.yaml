@@ -1,0 +1,72 @@
+asyncapi: 2.4.0
+
+info:
+  title: Kafka Messages definition
+  version: 1.0.0
+  description: Kafka messages specification
+
+components:
+  schemas:
+    DeviceInstallationPublished:
+      allOf:
+        - $ref: '#/components/schemas/BasicKafkaEnvelope'
+        - type: object
+          properties:
+            data:
+              type: object
+              required:
+                - deviceId
+                - id
+                - received
+                - recorded
+              properties:
+                deviceId:
+                  $ref: '#/components/schemas/UUID'
+                id:
+                  $ref: '#/components/schemas/UUID'
+                received:
+                  $ref: '#/components/schemas/Timestamp'
+                recorded:
+                  $ref: '#/components/schemas/Timestamp'
+
+                      # ----------------- OTHER schemas -------------------
+    Timestamp:
+      title: timestamp
+      type: string
+      pattern: >-
+        ^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$
+      example: '2017-01-09T08:27:22.222Z'
+
+    UUID:
+      type: string
+      format: uuid
+      example: bd58d14f-fd3e-449c-b60c-a56548190d68
+
+    BasicKafkaEnvelope:
+      type: object
+      required:
+        - id
+        - key
+        - type
+        - generated
+        - requestId
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        key:
+          type: string
+        type:
+          type: string
+        generated:
+          $ref: '#/components/schemas/Timestamp'
+        requestId:
+          type: string
+
+    TaskStatus:
+      type: string
+      enum:
+        - success
+        - error
+        - in_progress
+
+

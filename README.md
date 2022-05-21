@@ -33,10 +33,22 @@ AsyncApiValidator.fromSource(source, options)
 | value | type | | description |
 |-----|----|----|---|
 | ignoreArray | boolean | optional | If `true`, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
-| msgIdentifier | string | required | Name of parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions)|
+| msgIdentifier | string | optional (required only if you use .validate() method) | Name of the parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions). |
 | path | string | optional |  Path to the AsyncAPI document. It will be used to resolve relative references. Defaults to current working dir. As [used in asyncapi-parser](https://github.com/asyncapi/parser-js/blob/master/lib/parser.js#L41) |
 
 ## Instance Methods
+
+### .validateByMessageId()
+```js
+/**
+ * Method to validate the Payload against schema definition.
+ * @param {string} key - required - messageId
+ * @param {Object} payload - required - payload of the message
+ * @returns {boolean}
+ */
+.validateByMessageId(key, payload)
+```
+Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject). To use this method, your AsyncAPI Schema version should be >= v2.4.0.
 
 ### .validate()
 ```js
@@ -50,11 +62,46 @@ AsyncApiValidator.fromSource(source, options)
  */
 .validate(key, payload, channel, operation)
 ```
+To use this method for validation, you should provide `msgIdentifier` in AsyncApiValidator `options`.
 
 ### .schema
 `.schema` property can be used to access AsyncAPI schema in JSON format and with all the refs resolved.
 
-## Example usage
+## Example usage with .validateByMessageId() method
+Schema
+```yaml
+asyncapi: 2.4.0
+
+info:
+  title: User Events
+  version: 1.0.0
+
+channels:
+  user-events:
+    description: user related events
+    publish:
+      message:
+        messageId: UserDeletedMessage
+        payload:
+          type: object
+          properties:
+            userEmail:
+              type: string
+            userId:
+              type: string
+```
+```js
+const AsyncApiValidator = require('asyncapi-validator')
+let va = await AsyncApiValidator.fromSource('./api.yaml')
+
+// validate messageId 'UserDeleted'
+va.validate('UserDeleted', {
+  userId: '123456789',
+  userEmail: 'alex@mail.com',
+})
+```
+
+## Example usage with .validate() method
 Schema
 ```yaml
 asyncapi: 2.0.0
@@ -97,13 +144,13 @@ Error thrown from asyncapi-validator will have these properties.
 |---------|--------|-------------------------|-----------------------------------------------------------------------------------------------------------------|
 | name    | string | AsyncAPIValidationError | AsyncAPIValidationError                                                                                         |
 | key     | string |                         | "key" of payload against which schema is validated                                                              |
-| message | string |                         | [errorsText from AJV](https://github.com/epoberezkin/ajv#errorstextarrayobject-errors--object-options---string) |
-| errors  | array  |                         | [Array of errors from AJV](https://github.com/epoberezkin/ajv#validation-errors)                                |
+| message | string |                         | [errorsText from AJV](https://ajv.js.org/api.html#ajv-errorstext-errors-object-options-object-string) |
+| errors  | array  |                         | [Array of errors from AJV](https://ajv.js.org/api.html#validation-errors)                                |
 
 ### Error Example
 ```js
 {
-  AsyncAPIValidationError: data.type should be equal to one of the allowed values at MessageValidator.validate (.....
+  AsyncAPIValidationError: data.type must be equal to one of the allowed values at MessageValidator.validate (.....
   name: 'AsyncAPIValidationError',
   key: 'hello',
   errors:
@@ -112,23 +159,9 @@ Error thrown from asyncapi-validator will have these properties.
         dataPath: '.type',
         schemaPath: '#/properties/type/enum',
         params: [Object],
-        message: 'should be equal to one of the allowed values'
+        message: 'must be equal to one of the allowed values'
       }
     ]
 }
 ```
 
-## How it works
-asyncapi-validator validates the payload of the messages of a certain message, as described in your schema document. To validate against
-a certain message, it needs to find the message are you pointing to in schema document. For that, you need to pass it `key`, `channel`, and `operation` of the message.
-
-```js
-validate(key, payload, channel, operation)
-```
-
-- One `channel` should be defined only once in your whole schema document.
-- The `key` should be unique for an `operation` on a `channel`.
-
-That means,
-- Messages going to different operations on one channel, can have same `key`.
-- Messages going to different channels, can have same `key`
