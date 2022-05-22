@@ -26,7 +26,7 @@ describe('deviceMessages', () => {
       type: 'null'
     }, 'device-installation-events', 'publish')
     // eslint-disable-next-line quotes, max-len
-    expect(validate).toThrowError(new Error("data should have required property 'id', data should have required property 'key', data should have required property 'generated', data should have required property 'requestId'"))
+    expect(validate).toThrowError(new Error("data must have required property 'id', data must have required property 'key', data must have required property 'generated', data must have required property 'requestId'"))
   })
 
   it('should not throw error', () => {

@@ -1,4 +1,4 @@
-asyncapi: 2.0.0
+asyncapi: 2.4.0
 
 info:
   title: User Events
@@ -10,7 +10,7 @@ channels:
     publish:
       message:
         name: UserDeletedMessage
-        x-custom-key: UserDeleted
+        messageId: UserDeleted
         payload:
           type: object
           properties:

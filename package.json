@@ -1,6 +1,6 @@
 {
   "name": "asyncapi-validator",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "message validator through asyncapi schema",
   "main": "index.js",
   "types": "index.d.ts",
@@ -27,9 +27,10 @@
   },
   "homepage": "https://github.com/WaleedAshraf/asyncapi-validator#readme",
   "dependencies": {
-    "@asyncapi/openapi-schema-parser": "^2.0.0",
-    "@asyncapi/parser": "^1.4.1",
-    "ajv": "^6.12.6"
+    "@asyncapi/openapi-schema-parser": "^2.0.1",
+    "@asyncapi/parser": "^1.15.0",
+    "ajv": "^8.11.0",
+    "ajv-formats": "^2.1.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
@@ -40,6 +41,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^26.0.1"
+    "jest": "^28.0.1"
   }
 }
