@@ -74,9 +74,33 @@ describe('deviceMessages', () => {
         vibration: -9223372036854776000,
         floatType: 3.402823669209385e+38,
         doubleType: 1.7976931348623158e+308,
-        byteType: 'U3dhZ2dlciByb2Nrcw=='
+        byteType: 'U3dhZ2dlciByb2Nrcw==',
+        numberType: 19
       }
     })
     expect(validate).toStrictEqual(true)
+  })
+
+  it('should throw error for exclusiveMaximum', () => {
+    const validate = () => validator.validateByMessageId('PubDeviceInstallationResponsePublishedMessage', {
+      id: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+      key: 'string',
+      type: 'string',
+      generated: '2017-01-09T08:27:22.222Z',
+      requestId: 'string',
+      data: {
+        deviceId: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+        id: 'bd58d14f-fd3e-449c-b60c-a56548190d68',
+        status: 'success',
+        message: 'string',
+        temperature: 2147483647,
+        vibration: -9223372036854776000,
+        floatType: 3.402823669209385e+38,
+        doubleType: 1.7976931348623158e+308,
+        byteType: 'U3dhZ2dlciByb2Nrcw==',
+        numberType: 20
+      }
+    })
+    expect(validate).toThrowError(new Error('data/data/numberType must be < 20'))
   })
 })

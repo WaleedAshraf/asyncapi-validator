@@ -83,6 +83,10 @@ components:
                 byteType:
                   type: string
                   format: byte
+                numberType:
+                  type: number
+                  minimum: 10
+                  exclusiveMaximum: 20
 
     # ----------------- OTHER schemas -------------------
     Timestamp:
