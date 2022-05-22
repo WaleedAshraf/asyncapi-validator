@@ -5,7 +5,7 @@ const ValidationError = require('./ValidationError')
 class MessageValidator {
   /**
    * @param {object} schema - user defined AsyncApi Schema
-   * @param {object} options - options for validations
+   * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} options - options for validations
    * @param {object} channels - simplified channels object from schema
    */
   constructor(schema, options, channels, messagesWithId) {

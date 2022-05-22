@@ -5,9 +5,9 @@ const messageId = 'messageId'
 function ValidatorFactory() {
   /**
    * Load schema from provided source
-   * @param {String} source - source
-   * @param {Object} options - options
-   * @returns MessageValidator
+   * @param {string | Object} source
+   * * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} [options] - options for validations
+   * @returns {Promise<MessageValidator>}
    */
   this.fromSource = async (source, options = {}) => {
     const {_json: schema} = await Parser.parse(source, options)
@@ -19,6 +19,7 @@ function ValidatorFactory() {
 /**
  * @param {{ channels: { [x: string]: { [x in 'publish' | 'subscribe' | undefined]: { message: any; }; }; }; }} schema
  * @param {string} msgIdentifier
+ * @returns {{channels: Object, messagesWithId: Object}}
  */
 const constructsChannels = (schema, msgIdentifier) => {
   const channels = {}
@@ -41,7 +42,7 @@ const constructsChannels = (schema, msgIdentifier) => {
  * @param {{ [x in 'publish' | 'subscribe' | undefined]: { message: any; }; }} channel
  * @param {'publish' | 'subscribe'} operation
  * @param {string} msgIdentifier
- * @returns {Object} {msgsForOp, msgsForId}
+ * @returns {{msgsForOp: Object, msgsForId: Object}}
  */
 const getMessagesForOperation = (channel, operation, msgIdentifier) => {
   const msgsForOp = {}

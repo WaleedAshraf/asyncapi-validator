@@ -2,19 +2,31 @@
 
 # asyncapi-validator
 
-message validator through asyncapi schema
+Message validator through AsyncAPI schema
 
 _Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0, support for older versions of AsyncAPI Schema has been removed.
 
 `npm i asyncapi-validator`
 
 ## Features
-- Validate your AsyncApi Document against AsyncApi Schema definition
 - Validate your messages against your AsyncApi Document
+- Validate your AsyncApi Document against AsyncApi Schema definition
 - Load your AsyncApi Schema from local file or any URL
 - Supports AsyncApi in JSON and YAML format
 - Supports AsyncAPI v2.0.0 and above
-- more coming . . .
+
+## Content
+- [Class Methods](#class-methods)
+  - [AsyncApiValidator.fromSource()](#asyncapivalidatorfromsource)
+    - [Options](#options)
+- [Instance Methods / Properties](#instance-methods--properties)
+  - [.validateByMessageId()](#validateByMessageId)
+  - [.validate()](#validate)
+  - [.schema](#schema)
+- [Example usage with .validateByMessageId() method](#example-usage-with-validatebymessageid-method)
+- [Example usage with .validate() method](#example-usage-with-validate-method)
+- [Errors](#errors)
+  - [Error Example](#error-example)
 
 ## Class Methods
 
@@ -36,9 +48,12 @@ AsyncApiValidator.fromSource(source, options)
 | msgIdentifier | string | optional (required only if you use .validate() method) | Name of the parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions). |
 | path | string | optional |  Path to the AsyncAPI document. It will be used to resolve relative references. Defaults to current working dir. As [used in asyncapi-parser](https://github.com/asyncapi/parser-js/blob/master/lib/parser.js#L41) |
 
-## Instance Methods
+## Instance Methods / Properties
 
 ### .validateByMessageId()
+
+Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject). To use this method, your AsyncAPI Schema version should be >= v2.4.0.
+
 ```js
 /**
  * Method to validate the Payload against schema definition.
@@ -48,9 +63,11 @@ AsyncApiValidator.fromSource(source, options)
  */
 .validateByMessageId(key, payload)
 ```
-Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject). To use this method, your AsyncAPI Schema version should be >= v2.4.0.
 
 ### .validate()
+
+To use this method for validation, you should provide `msgIdentifier` in AsyncApiValidator `options`.
+
 ```js
 /**
  * Method to validate the Payload against schema definition.
@@ -62,7 +79,6 @@ Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.as
  */
 .validate(key, payload, channel, operation)
 ```
-To use this method for validation, you should provide `msgIdentifier` in AsyncApiValidator `options`.
 
 ### .schema
 `.schema` property can be used to access AsyncAPI schema in JSON format and with all the refs resolved.

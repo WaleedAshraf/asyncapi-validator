@@ -8,7 +8,7 @@ Version 4.0.0 *(2022-05-22)*
 
 ### New / Improvements:
 * Support AsyncAPI schema v2.4.0
-* Added `validateByMessageId()` method, which only requires `key` and `value`. To use this method, your AsyncAPI schema should be >= 2.4.0
+* Added `validateByMessageId()` method, which only requires `key` and `value`. To use this method, your AsyncAPI schema should be >= 2.4.0. `messageId` should be defined in schema as per [AsyncAPI 2.4.0 schema definition](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject).
 * `msgIdentifier` option is only required if you use `.validate()` method.
 * You can use both `validateByMessageId()` and `validate()` methods if your AsyncAPI schema version is >= 2.4.0
 * Start using `ajv-formats` for custom formats.
