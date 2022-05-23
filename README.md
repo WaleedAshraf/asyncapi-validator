@@ -97,7 +97,7 @@ channels:
     description: user related events
     publish:
       message:
-        messageId: UserDeletedMessage
+        messageId: UserRemoved
         payload:
           type: object
           properties:
@@ -110,8 +110,8 @@ channels:
 const AsyncApiValidator = require('asyncapi-validator')
 let va = await AsyncApiValidator.fromSource('./api.yaml')
 
-// validate messageId 'UserDeleted'
-va.validate('UserDeleted', {
+// validate messageId 'UserRemoved'
+va.validate('UserRemoved', {
   userId: '123456789',
   userEmail: 'alex@mail.com',
 })
