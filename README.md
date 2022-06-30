@@ -111,7 +111,7 @@ const AsyncApiValidator = require('asyncapi-validator')
 let va = await AsyncApiValidator.fromSource('./api.yaml')
 
 // validate messageId 'UserRemoved'
-va.validate('UserRemoved', {
+va.validateByMessageId('UserRemoved', {
   userId: '123456789',
   userEmail: 'alex@mail.com',
 })
