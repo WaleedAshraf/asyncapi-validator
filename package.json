@@ -1,19 +1,22 @@
 {
   "name": "asyncapi-validator",
-  "version": "4.0.0",
-  "description": "message validator through asyncapi schema",
+  "version": "4.1.0",
+  "description": "Message validator for Async API schema supporting socket.io messages like `x-ack`.",
   "main": "index.js",
   "types": "index.d.ts",
+  "type": "commonjs",
   "scripts": {
+    "build": "webpack --mode production",
     "test": "jest",
     "lint": "./node_modules/.bin/eslint ./"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WaleedAshraf/asyncapi-validator.git"
+    "url": "git@github.com:netcore-jsa/asyncapi-validator.git"
   },
   "keywords": [
     "asyncapi",
+    "socket.io",
     "kafka",
     "rabbitmq",
     "test",
@@ -21,14 +24,21 @@
     "api"
   ],
   "author": "Waleed Ashraf",
+  "contributors": [
+    {
+      "name" : "Marek Urban",
+      "email" : "marek.u@unimus.net",
+      "url" : "https://github.com/marek-urban"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/WaleedAshraf/asyncapi-validator/issues"
+    "url": "https://github.com/netcore-jsa/asyncapi-validator/issues"
   },
-  "homepage": "https://github.com/WaleedAshraf/asyncapi-validator#readme",
+  "homepage": "https://github.com/netcore-jsa/asyncapi-validator?tab=readme-ov-file#readme",
   "dependencies": {
     "@asyncapi/openapi-schema-parser": "^2.0.1",
-    "@asyncapi/parser": "^1.15.0",
+    "@asyncapi/parser": "^1.18.1",
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1"
   },
@@ -41,6 +51,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^28.0.1"
+    "jest": "^28.0.1",
+    "babel-core": "^6.3.21",
+    "babel-loader": "^9.1.3",
+    "@babel/preset-env": "^7.23.9",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
   }
 }
