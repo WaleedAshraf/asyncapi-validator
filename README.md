@@ -12,16 +12,17 @@ all changes are suitable for both parties._
 
 Message validator through AsyncAPI schema with support for Socket.IO `x-ack` message response.
 
-_Note: This package only support AsyncAPI Schema v2.0.0 and above._
+_Note: This package only support AsyncAPI Schema v2.0.0 - v2.6.0_
 
 ## Features
 - Validate your messages against your AsyncApi Document
 - Validate your AsyncApi Document against AsyncApi Schema definition
 - Load your AsyncApi Schema from local file or any URL
-- Parse AsyncApi Schema from String or Object directly
+- **Parse AsyncApi Schema from String or Object directly**
 - Supports AsyncApi in JSON and YAML format
-- Supports AsyncAPI v2.0.0 and above
-- Supports Socket.Io format with an `x-ack` message response
+- **Supports AsyncAPI v2.0.0 - v2.6.0**
+- **Supports `Socket.IO` format with an `x-ack` message response**
+- **Added webpack bundler & `UMD` bundled lib: [dist/asyncapi-validator-bundle.js](dist%2Fasyncapi-validator-bundle.js)**
 
 ## Content
 - [Class Methods](#class-methods)

@@ -8,7 +8,7 @@ module.exports = {
       type: 'const'
     },
     libraryTarget: 'umd', // make the bundle export
-    filename: 'bundle.js', // Output bundle file name
+    filename: 'asyncapi-validator-bundle.js', // Output bundle file name
     path: path.resolve(__dirname, 'dist') // Output folder
   },
   module: {
