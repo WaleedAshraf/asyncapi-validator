@@ -23,11 +23,12 @@ class MessageValidator {
    * @param {Object} payload
    * @param {Object} channel
    * @param {Object} operation
+   * @param {string} messageField default is 'payload', for socket.io ACK response this can be 'x-ack'
    * @returns {boolean}
    */
-  validate(key, payload, channel, operation) {
+  validate(key, payload, channel, operation, messageField = 'payload') {
     this._validateArgs(key, channel, operation)
-    const payloadSchema = this._channels[channel][operation][key].payload
+    const payloadSchema = this._channels[channel][operation][key][messageField]
     payload = this._shouldHandleArray(payloadSchema, payload) ? [payload] : payload
     const validator = this._ajv.compile(payloadSchema)
 
@@ -38,9 +39,15 @@ class MessageValidator {
     return true
   }
 
-  validateByMessageId(key, payload) {
+  /**
+   * @param {string} key
+   * @param {Object} payload
+   * @param {string} messageField default is 'payload', for socket.io ACK response this can be 'x-ack'
+   * @returns {boolean}
+   */
+  validateByMessageId(key, payload, messageField = 'payload') {
     this._validateArgs(key, null, null, 'validateByMessageId')
-    const payloadSchema = this._messagesWithId[key].payload
+    const payloadSchema = this._messagesWithId[key][messageField]
     payload = this._shouldHandleArray(payloadSchema, payload) ? [payload] : payload
     const validator = this._ajv.compile(payloadSchema)
 
@@ -95,8 +102,7 @@ class MessageValidator {
     const schemaIsArray = payloadSchema.type === 'array'
     const payloadIsNotArray = !Array.isArray(payload)
 
-    if (shouldIgnoreArray && schemaIsArray && payloadIsNotArray) return true
-    return false
+    return !!(shouldIgnoreArray && schemaIsArray && payloadIsNotArray)
   }
 }
 

@@ -5,11 +5,13 @@ declare module 'asyncapi-validator' {
       payload: unknown,
       channel: string,
       operation: 'publish' | 'subscribe',
+      messageField: 'payload' | 'x-ack'
     ) => boolean;
 
     validateByMessageId: (
       key: string,
       payload: unknown,
+      messageField: 'payload' | 'x-ack'
     ) => boolean;
   };
 

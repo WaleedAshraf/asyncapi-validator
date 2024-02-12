@@ -1,19 +1,28 @@
-![Unit Tests](https://github.com/WaleedAshraf/asyncapi-validator/workflows/Unit%20Tests/badge.svg?branch=master) [![codecov](https://codecov.io/gh/WaleedAshraf/asyncapi-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/WaleedAshraf/asyncapi-validator) ![CodeQL](https://github.com/WaleedAshraf/asyncapi-validator/workflows/CodeQL/badge.svg?branch=master)
-
+[![Unit Tests](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/test-coverage.yml/badge.svg)](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/test-coverage.yml)[![CodeQL](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/codeql-analysis.yml)
 # asyncapi-validator
+_**Because this package is a fork of [asyncapi-validator](https://github.com/WaleedAshraf/asyncapi-validator), 
+it is not publicly deployed and available on the global NPM repository. 
+In our case, our need was to use this modified bundled version `dist/bundle.js`
+as a sub-lib into our `Java` environment under the `V8` engine like `J2V8`, therefore it's not planned
+to make this modification as a part of an official release.**_
 
-Message validator through AsyncAPI schema
+_However, this might change in a future
+by making pull-request to [asyncapi-validator](https://github.com/WaleedAshraf/asyncapi-validator), if 
+all changes are suitable for both parties._
+***
 
-_Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0, support for older versions of AsyncAPI Schema has been removed.
+Message validator through AsyncAPI schema with support for Socket.IO `x-ack` message response.
 
-`npm i asyncapi-validator`
+_Note: This package only support AsyncAPI Schema v2.0.0 and above._
 
 ## Features
 - Validate your messages against your AsyncApi Document
 - Validate your AsyncApi Document against AsyncApi Schema definition
 - Load your AsyncApi Schema from local file or any URL
+- Parse AsyncApi Schema from String or Object directly
 - Supports AsyncApi in JSON and YAML format
 - Supports AsyncAPI v2.0.0 and above
+- Supports Socket.Io format with an `x-ack` message response
 
 ## Content
 - [Class Methods](#class-methods)
@@ -34,7 +43,7 @@ _Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0,
 ```js
 /** 
  * Load and Parse the schema from source.
- * @param {string | Object} source - local PATH or URL of schema or schema Object
+ * @param {string | Object} source - URL or file PATH or an actual JSON / YAML object or string
  * @param {Object} options - options for validation
  * @returns {Promise}
  */
@@ -59,9 +68,10 @@ Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.as
  * Method to validate the Payload against schema definition.
  * @param {string} key - required - messageId
  * @param {Object} payload - required - payload of the message
+ * @param {string} messageField - default is 'payload', for socket.io ACK response this can be 'x-ack'
  * @returns {boolean}
  */
-.validateByMessageId(key, payload)
+.validateByMessageId(key, payload, messageField = 'payload')
 ```
 
 ### .validate()
@@ -75,21 +85,22 @@ To use this method for validation, you should provide `msgIdentifier` in AsyncAp
  * @param {Object} payload - required - payload of the message
  * @param {string} channel - required - name of the channel/topic
  * @param {string} operation - required - publish | subscribe
+ * @param {string} messageField - default is 'payload', for socket.io ACK response this can be 'x-ack'
  * @returns {boolean}
  */
-.validate(key, payload, channel, operation)
+.validate(key, payload, channel, operation, messageField = 'payload')
 ```
 
 ### .schema
 `.schema` property can be used to access AsyncAPI schema in JSON format and with all the refs resolved.
 
-## Example usage with .validateByMessageId() method
+## Example usage with .validateByMessageId() method for Socket.IO Schema
 Schema
 ```yaml
-asyncapi: 2.4.0
+asyncapi: 2.6.0
 
 info:
-  title: User Events
+  title: AsyncAPI Socket.IO example
   version: 1.0.0
 
 channels:
@@ -97,24 +108,62 @@ channels:
     description: user related events
     publish:
       message:
-        messageId: UserRemoved
+        name: create
+        messageId: test_create
         payload:
-          type: object
-          properties:
-            userEmail:
-              type: string
-            userId:
-              type: string
+          $ref: '#/components/schemas/CreateRequest'
+        x-ack:
+          $ref: '#/components/schemas/CreateResponse'
+components:
+  schemas:
+    CreateRequest:
+      $id: 'CreateRequest'
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          additionalItems: false
+          items:
+            type: string
+      required:
+        - data
+    CreateResponse:
+      $id: 'CreateResponse'
+      type: object
+      additionalProperties: false
+      properties:
+        successful:
+          type: boolean
+        data:
+          type: array
+          additionalItems: false
+          items:
+            type: string
+      required:
+        - successful
+        - data
 ```
 ```js
-const AsyncApiValidator = require('asyncapi-validator')
+const AsyncApiValidator = require('./src/ValidatorFactory.js')
 let va = await AsyncApiValidator.fromSource('./api.yaml')
 
-// validate messageId 'UserRemoved'
-va.validateByMessageId('UserRemoved', {
-  userId: '123456789',
-  userEmail: 'alex@mail.com',
+// validate x-ack response
+va.validateByMessageId('CreateRequest', {
+  data: ['someVal'],
 })
+
+// validate x-ack response
+va.validateByMessageId('CreateResponse', {
+  successful: true,
+  data: ['someVal']
+}, 'x-ack')
+
+// validate or use .validate() method
+va.validate('CreateResponse', {
+  successful: true,
+  data: ['someVal']
+}, 'user-events', 'publish', 'x-ack')
 ```
 
 ## Example usage with .validate() method
@@ -142,7 +191,7 @@ channels:
               type: string
 ```
 ```js
-const AsyncApiValidator = require('asyncapi-validator')
+const AsyncApiValidator = require('./src/ValidatorFactory.js')
 let va = await AsyncApiValidator.fromSource('./api.yaml', {msgIdentifier: 'x-custom-key'})
 
 // validate 'UserDeleted' on channel 'user-events' with operation 'publish'
@@ -166,7 +215,7 @@ Error thrown from asyncapi-validator will have these properties.
 ### Error Example
 ```js
 {
-  AsyncAPIValidationError: data.type must be equal to one of the allowed values at MessageValidator.validate (.....
+  AsyncAPIValidationError: 'data.type must be equal to one of the allowed values at MessageValidator.validate (.....',
   name: 'AsyncAPIValidationError',
   key: 'hello',
   errors:

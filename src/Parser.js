@@ -6,7 +6,7 @@ const ValidationError = require('./ValidationError')
 
 class Parser {
   /**
-   * @param {string} source
+   * @param {string} source URL or file path or an actual JSON / YAML object or string
    * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} options
    * @returns {Promise} ref resolved schema object
    */
@@ -14,12 +14,15 @@ class Parser {
     const defaultConfig = options && options.path ? {path: options.path} : {}
     try {
       asyncapiParser.registerSchemaParser(openapiSchemaParser)
+      if (typeof source === 'string') {
+        if (source.startsWith('https://') || source.startsWith('http://')) {
+          return await asyncapiParser.parseFromUrl(source)
+        }
+        return await asyncapiParser.parse(source, {path: ''})
+      }
       if (source instanceof Object) {
         // Source could be an object (instead of JSON / YAML string.)
         return await asyncapiParser.parse(source)
-      }
-      if (source.indexOf('https://') === 0 || source.indexOf('http://') === 0) {
-        return await asyncapiParser.parseFromUrl(source)
       }
       const file = await readFile(source, 'utf8')
       return await asyncapiParser.parse(file, defaultConfig)

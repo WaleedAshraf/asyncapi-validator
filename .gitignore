@@ -78,6 +78,9 @@ typings/
 # vscode
 .vscode/
 
+# intellij IDEA
+.idea/
+
 # development files
 dev/
 dist/

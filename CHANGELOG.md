@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 4.1.0 *(2024-02-12)*
+----------------------------
+### New / Improvements:
+* Support AsyncAPI schema up to v2.6.0
+* Updated [AJV](https://github.com/ajv-validator/) dependency to v8.11.0
+* Updated `validateByMessageId()` `validate` method, added support to validate custom field like `x-ack` via `messageField`
+* Added `webpack` configuration with bundling to standalone lib - for importing to `J2V8` or `Javet` like libraries
+***
+### Contributors: 
+* [Marek Urban](https://github.com/marek-urban) - [marek.u@unimus.net](mailto:marek.u@unimus.net)
+
 Version 4.0.0 *(2022-05-22)*
 ----------------------------
 ### Breaking:

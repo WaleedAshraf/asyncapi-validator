@@ -5,8 +5,8 @@ const messageId = 'messageId'
 function ValidatorFactory() {
   /**
    * Load schema from provided source
-   * @param {string | Object} source
-   * * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} [options] - options for validations
+   * @param {string | Object} source URL or file path or an actual JSON / YAML object or string
+   * @param {{ msgIdentifier?: string; ignoreArray?: boolean; path?: any; }} [options] - options for validations
    * @returns {Promise<MessageValidator>}
    */
   this.fromSource = async (source, options = {}) => {
