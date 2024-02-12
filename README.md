@@ -37,6 +37,15 @@ _Note: This package only support AsyncAPI Schema v2.0.0 - v2.6.0_
 - [Errors](#errors)
   - [Error Example](#error-example)
 
+## Load library
+```js
+// Directly from sources
+const AsyncApiValidator = require('./src/ValidatorFactory.js')
+
+// From bundled lib
+const AsyncApiValidator = require('./asyncapi-validator-bundle.js')
+````
+
 ## Class Methods
 
 ### AsyncApiValidator.fromSource()
