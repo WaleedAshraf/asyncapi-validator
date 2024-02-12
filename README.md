@@ -1,4 +1,3 @@
-[![Unit Tests](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/test-coverage.yml/badge.svg)](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/test-coverage.yml)[![CodeQL](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/netcore-jsa/asyncapi-validator/actions/workflows/codeql-analysis.yml)
 # asyncapi-validator
 _**Because this package is a fork of [asyncapi-validator](https://github.com/WaleedAshraf/asyncapi-validator), 
 it is not publicly deployed and available on the global NPM repository. 
