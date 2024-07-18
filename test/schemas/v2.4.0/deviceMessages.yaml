@@ -34,7 +34,7 @@ components:
       title: DeviceInstallationResponsePublished
       summary: Device Installation Response Published
       messageId: PubDeviceInstallationResponsePublishedMessage
-      schemaFormat: 'application/vnd.oai.openapi;version=3.0.0'
+      schemaFormat: 'application/schema+yaml;version=draft-07'
       payload:
         $ref: '#/components/schemas/DeviceInstallationResponsePublished'
     SubDeviceInstallationResponsePublished:
@@ -42,7 +42,7 @@ components:
       title: DeviceInstallationResponsePublished
       summary: Device Installation Response Published
       messageId: SubDeviceInstallationResponsePublishedMessage
-      schemaFormat: 'application/vnd.oai.openapi;version=3.0.0'
+      schemaFormat: 'application/schema+yaml;version=draft-07'
       payload:
         $ref: '#/components/schemas/DeviceInstallationResponsePublished'
 

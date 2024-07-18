@@ -53,9 +53,9 @@ class MessageValidator {
 
   /**
    * @param {string} key
-   * @param {string | number} channel
-   * @param {string} operation
-   * @param {string} method
+   * @param {string | number | null} channel
+   * @param {string | null} operation
+   * @param {string | null} method
    */
   _validateArgs(key, channel, operation, method = null) {
     if (method === 'validateByMessageId') {
@@ -76,11 +76,11 @@ class MessageValidator {
         throw new ValidationError(`operation "${operation}" is not valid`)
       }
 
-      if (!this._channels[channel]) {
+      if (channel !== null && !this._channels[channel]) {
         throw new ValidationError(`channel "${channel}" not found`)
       }
 
-      if (!this._channels[channel][operation][key]) {
+      if (channel !== null && !this._channels[channel][operation][key]) {
         throw new ValidationError(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
       }
     }
