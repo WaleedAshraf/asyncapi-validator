@@ -4,9 +4,9 @@ Change Log
 Version 5.0.0 *(2024-07-21)*
 ----------------------------
 ### Breaking:
-* Errors messages format for initial check on AsyncApi document has been updated.
-  * _Note: No change in errors thrown from `validate()` method._
-* Deprecate `validateByMessageId()` method as `messageId` was removed in AsyncApi v3.0.0. More details here [asyncapi/spec/issues/978](https://github.com/asyncapi/spec/issues/978)
+* Errors message format for the initial check on the AsyncApi document has been updated.
+  * _Note: No change in errors thrown from the `validate()` method._
+* Deprecate the `validateByMessageId()` method as `messageId` was removed in AsyncApi v3.0.0. More details here [asyncapi/spec/issues/978](https://github.com/asyncapi/spec/issues/978)
 
 ### New / Improvements:
 * Support AsyncAPI schema v3.0.0
@@ -19,8 +19,8 @@ Version 4.0.0 *(2022-05-22)*
 
 ### New / Improvements:
 * Support AsyncAPI schema v2.4.0
-* Added `validateByMessageId()` method, which only requires `key` and `value`. To use this method, your AsyncAPI schema should be >= 2.4.0. `messageId` should be defined in schema as per [AsyncAPI 2.4.0 schema definition](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject).
-* `msgIdentifier` option is only required if you use `.validate()` method.
+* Added `validateByMessageId()` method, which only requires `key` and `value`. To use this method, your AsyncAPI schema should be >= 2.4.0. `messageId` should be defined in the schema as per [AsyncAPI 2.4.0 schema definition](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject).
+* The `msgIdentifier` option is only required if you use the `.validate()` method.
 * You can use both `validateByMessageId()` and `validate()` methods if your AsyncAPI schema version is >= 2.4.0
 * Start using `ajv-formats` for custom formats.
 
@@ -41,10 +41,10 @@ Version 3.0.0 *(2021-03-20)*
 ----------------------------
 ### Breaking:
 * Remove support for AsyncAPI Schema v1.2.0
-* Remove `._schema` property from instance. Use `.schema` instead.
+* Remove the `._schema` property from the instance. Use `.schema` instead.
 
 ### New / Improvements:
-* `channel`, `operation` and `options.msgIdentifier` are required for validation.
+* `channel`, `operation`, and `options.msgIdentifier` are required for validation.
 * Add support for OpenAPI formats
 * Using @asyncapi/openapi-schema-parser and @asyncapi/parser
 
@@ -55,12 +55,12 @@ Version 2.5.0 *(2020-10-03)*
 
 Version 2.4.5 *(2020-07-16)*
 ----------------------------
-* remove travis integration
-* use github actions for testing and coverage report
+* Remove Travis integration
+* use GitHub actions for testing and coverage report
 
 Version 2.4.4 *(2020-05-29)*
 ----------------------------
-* remove dist folder
+* remove the dist folder
 
 Version 2.4.3 *(2020-05-09)*
 ----------------------------
@@ -97,7 +97,7 @@ Version 2.3.0 *(2019-07-24)*
 Version 2.2.1 *(2019-07-18)*
 ----------------------------
 * Added support for options
-* Added support for if payload is object and schema is array
+* Added support for if the payload is object and schema is an array
 
 Version 2.2.0 *(2019-07-15)*
 ----------------------------
