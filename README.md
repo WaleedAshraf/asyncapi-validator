@@ -2,9 +2,9 @@
 
 # asyncapi-validator
 
-Message validator through AsyncAPI schema
+Validate messages through AsyncApi
 
-_Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0, support for older versions of AsyncAPI Schema has been removed.
+_Note: This package only support AsyncApi Schema v2.0.0 and above._
 
 `npm i asyncapi-validator`
 
@@ -13,18 +13,18 @@ _Note: This package only support AsyncAPI Schema v2.0.0 and above. Since v3.0.0,
 - Validate your AsyncApi Document against AsyncApi Schema definition
 - Load your AsyncApi Schema from local file or any URL
 - Supports AsyncApi in JSON and YAML format
-- Supports AsyncAPI v2.0.0 and above
+- Supports AsyncApi v2.0.0 and above
 
 ## Content
 - [Class Methods](#class-methods)
   - [AsyncApiValidator.fromSource()](#asyncapivalidatorfromsource)
     - [Options](#options)
 - [Instance Methods / Properties](#instance-methods--properties)
-  - [.validateByMessageId()](#validateByMessageId)
   - [.validate()](#validate)
+  - [.validateByMessageId()](#validateByMessageId) - _deprecated_
   - [.schema](#schema)
-- [Example usage with .validateByMessageId() method](#example-usage-with-validatebymessageid-method)
 - [Example usage with .validate() method](#example-usage-with-validate-method)
+- [Example usage with .validateByMessageId() method](#example-usage-with-validatebymessageid-method)
 - [Errors](#errors)
   - [Error Example](#error-example)
 
@@ -44,15 +44,32 @@ AsyncApiValidator.fromSource(source, options)
 #### Options
 | value | type | | description |
 |-----|----|----|---|
+| msgIdentifier | string | required | Name of the parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://www.asyncapi.com/docs/reference/specification/v3.0.0#messageObject). You can also use [Specification Extensions](https://www.asyncapi.com/docs/reference/specification/v3.0.0#specificationExtensions). |
 | ignoreArray | boolean | optional | If `true`, then if schema is defined as an array and payload is an object, then payload will be placed inside an array before validation. |
-| msgIdentifier | string | optional (required only if you use .validate() method) | Name of the parameter whose value will be used as `"key"` in `.validate()` method. Recommendation is to use `"name"` as described in [message-object](https://asyncapi.io/docs/specifications/2.0.0/#a-name-messageobject-a-message-object). You can also use [Specification Extensions](https://asyncapi.io/docs/specifications/2.0.0/#specificationExtensions). |
-| path | string | optional |  Path to the AsyncAPI document. It will be used to resolve relative references. Defaults to current working dir. As [used in asyncapi-parser](https://github.com/asyncapi/parser-js/blob/master/lib/parser.js#L41) |
+| path | string | optional |  Path to the AsyncApi document. |
 
-## Instance Methods / Properties
+## Instance Methods and Properties
 
-### .validateByMessageId()
+### .validate()
 
-Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject). To use this method, your AsyncAPI Schema version should be >= v2.4.0.
+You should provide `msgIdentifier` in AsyncApiValidator `options`.
+
+```js
+/**
+ * Method to validate the Payload against schema definition.
+ * @param {string} key - required - message key (as per msgIdentifier)
+ * @param {Object} payload - required - payload of the message
+ * @param {string} channel - required - name of the channel/topic
+ * @param {string} operation - required - publish | subscribe | send | receive
+ * @returns {boolean}
+ */
+.validate(key, payload, channel, operation)
+```
+
+### .validateByMessageId() - deprecated
+_This method is deprecated as `messageId` was removed in AsyncApi v3.0.0. More details here [asyncapi/spec/issues/978](https://github.com/asyncapi/spec/issues/978) ._
+
+Here `messageId` should be as [defined in AsyncApi Schema v2.4.0](https://www.asyncapi.com/docs/specifications/v2.4.0#messageObject). To use this method, your AsyncApi Schema version should be >= v2.4.0 and <3.0.0.
 
 ```js
 /**
@@ -64,24 +81,54 @@ Here `messageId` should be as [defined in AsyncAPI Schema v2.4.0](https://www.as
 .validateByMessageId(key, payload)
 ```
 
-### .validate()
-
-To use this method for validation, you should provide `msgIdentifier` in AsyncApiValidator `options`.
-
-```js
-/**
- * Method to validate the Payload against schema definition.
- * @param {string} key - required - message key
- * @param {Object} payload - required - payload of the message
- * @param {string} channel - required - name of the channel/topic
- * @param {string} operation - required - publish | subscribe
- * @returns {boolean}
- */
-.validate(key, payload, channel, operation)
-```
-
 ### .schema
-`.schema` property can be used to access AsyncAPI schema in JSON format and with all the refs resolved.
+`.schema` property can be used to access AsyncApi schema in JSON format and with all the refs resolved.
+
+## Example usage with .validate() method
+Schema
+```yaml
+asyncapi: 3.0.0
+info:
+  title: Streetlights Kafka API
+  version: 1.0.0
+channels:
+  lightingMeasured:
+    messages:
+      lightMeasured:
+        $ref: '#/components/messages/lightMeasured'
+operations:
+  sendLightMeasurement:
+    action: send
+    channel:
+      $ref: '#/channels/lightingMeasured'
+    messages:
+      - $ref: '#/channels/lightingMeasured/messages/lightMeasured'
+components:
+  messages:
+    lightMeasured:
+      x-unique-id: lightMeasured
+      payload:
+        $ref: '#/components/schemas/lightMeasuredPayload'
+  schemas:
+    lightMeasuredPayload:
+      type: object
+      properties:
+        lumens:
+          type: integer
+          minimum: 0
+          description: Light intensity measured in lumens.
+```
+```js
+const AsyncApiValidator = require('asyncapi-validator')
+let va = await AsyncApiValidator.fromSource('./api.yaml', {msgIdentifier: 'x-unique-id'})
+
+// validate 'lightMeasured' on channel 'lightingMeasured' with operation 'send'
+va.validate('lightMeasured', {
+  lumens: 0,
+  sentAt: '2019-08-24T14:15:22Z'
+}, 'lightingMeasured', 'send')
+```
+In above example, `"msgIdentifier"` is `"'x-unique-id"`. That is why, `"lightMeasured"` is used as `"key"` in `"va.validate()"` method.
 
 ## Example usage with .validateByMessageId() method
 Schema
@@ -116,42 +163,6 @@ va.validateByMessageId('UserRemoved', {
   userEmail: 'alex@mail.com',
 })
 ```
-
-## Example usage with .validate() method
-Schema
-```yaml
-asyncapi: 2.0.0
-
-info:
-  title: User Events
-  version: 1.0.0
-
-channels:
-  user-events:
-    description: user related events
-    publish:
-      message:
-        name: UserDeletedMessage
-        x-custom-key: UserDeleted
-        payload:
-          type: object
-          properties:
-            userEmail:
-              type: string
-            userId:
-              type: string
-```
-```js
-const AsyncApiValidator = require('asyncapi-validator')
-let va = await AsyncApiValidator.fromSource('./api.yaml', {msgIdentifier: 'x-custom-key'})
-
-// validate 'UserDeleted' on channel 'user-events' with operation 'publish'
-va.validate('UserDeleted', {
-  userId: '123456789',
-  userEmail: 'alex@mail.com',
-}, 'user-events', 'publish')
-```
-In above example, `"msgIdentifier"` is `"x-custom-key"`. That is why, `"UserDeleted"` is used as `"key"` in `"va.validate()"` method.
 
 ## Errors
 Error thrown from asyncapi-validator will have these properties.

@@ -17,39 +17,68 @@ function ValidatorFactory() {
 }
 
 /**
- * @param {{ channels: { [x: string]: { [x in 'publish' | 'subscribe']: { message: any; }; }; }; }} schema
- * @param {string} msgIdentifier
- * @returns {{channels: Object, messagesWithId: Object}}
+ * Constructs channels and messages with identifiers from the given schema.
+ * @param {object} schema - The schema object.
+ * @param {string} [msgIdentifier=''] - The message identifier.
+ * @returns {object} - An object containing the constructed channels and messages with identifiers.
  */
 const constructsChannels = (schema, msgIdentifier = '') => {
   const channels = {}
+  const messagesWithOperations = {}
   let messagesWithId = {}
 
+  if (schema.operations) {
+    Object.keys(schema.operations).forEach(operation => {
+      const channel = schema.operations[operation].channel['x-parser-unique-object-id']
+      messagesWithOperations[channel] = messagesWithOperations[channel] ? messagesWithOperations[channel].push(operation) : [operation]
+    })
+  }
+
   Object.keys(schema.channels).forEach(c => {
-    const {msgsForOp: publish, msgsForId: msgsForIdPub} = getMessagesForOperation(schema.channels[c], 'publish', msgIdentifier)
-    const {msgsForOp: subscribe, msgsForId: msgsForIdSub} = getMessagesForOperation(schema.channels[c], 'subscribe', msgIdentifier)
-    channels[c] = {publish, subscribe}
-    messagesWithId = {
-      ...messagesWithId,
-      ...msgsForIdPub,
-      ...msgsForIdSub
+    // For AsyncAPI 2.x.x
+    const operations = ['publish', 'subscribe']
+    operations.forEach(operation => {
+      const {msgsForOp, msgsForId} = getMessagesForOperation(schema.channels[c], operation, msgIdentifier)
+      if (Object.keys(msgsForOp).length) {
+        channels[c] = {
+          ...channels[c],
+          [operation]: msgsForOp
+        }
+      }
+      messagesWithId = {
+        ...messagesWithId,
+        ...msgsForId
+      }
+    })
+
+    // For AsyncAPI 3.x.x
+    if (messagesWithOperations[c] && messagesWithOperations[c].length) {
+      messagesWithOperations[c].forEach(operation => {
+        const {action, messages} = getMessagesByOperations(schema.operations, operation, msgIdentifier)
+        channels[c] = {
+          ...channels[c],
+          [action]: messages
+        }
+      })
     }
   })
   return {channels, messagesWithId}
 }
 
 /**
- * @param {{ [x in 'publish' | 'subscribe']: { message: any; }; }} channel
- * @param {'publish' | 'subscribe'} operation
+ * @param { any } channel
+ * @param {string} operation - The operation for which to create a validator.
+ *                             - 'publish' for publishing messages
+ *                             - 'subscribe' for subscribing to topics
  * @param {string} msgIdentifier
- * @returns {{msgsForOp: Object, msgsForId: Object}}
+ * @returns
  */
 const getMessagesForOperation = (channel, operation, msgIdentifier) => {
   const msgsForOp = {}
   const msgsForId = {}
   if (channel[operation]) {
     if (channel[operation].message.oneOf) {
-      channel[operation].message.oneOf.forEach(m => {
+      channel[operation].message.oneOf.forEach((m) => {
         if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
         if (m[messageId]) msgsForId[m[messageId]] = m
       })
@@ -60,6 +89,16 @@ const getMessagesForOperation = (channel, operation, msgIdentifier) => {
     }
   }
   return {msgsForOp, msgsForId}
+}
+
+const getMessagesByOperations = (operations, operation, msgIdentifier) => {
+  const messages = {}
+  const action = operations[operation].action
+  operations[operation].messages.forEach(message => {
+    messages[message[msgIdentifier]] = message
+  })
+
+  return {action, messages}
 }
 
 module.exports = new ValidatorFactory()

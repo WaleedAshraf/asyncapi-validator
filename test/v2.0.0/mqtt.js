@@ -91,12 +91,12 @@ describe('mqtt', () => {
     expect(validate).toStrictEqual(true)
   })
 
-  it('should throw error if try to use validateByMessageId() method with old schema', () => {
+  it('should throw error if try to use validateByMessageId() method with unsupported schema', () => {
     const validate = () => validator.validateByMessageId('devices/measurements', [{
       name: 'temperature',
       timestamp: 0,
       value: 36.6
     }])
-    expect(validate).toThrowError(new Error('AsyncAPI schema version should be >= 2.4.0. Your version is "2.0.0"'))
+    expect(validate).toThrowError(new Error('AsyncAPI schema version should be >= 2.4.0 and <3.0.0 . Your version is "2.0.0"'))
   })
 })

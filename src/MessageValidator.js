@@ -38,6 +38,7 @@ class MessageValidator {
     return true
   }
 
+  // deprecated
   validateByMessageId(key, payload) {
     this._validateArgs(key, null, null, 'validateByMessageId')
     const payloadSchema = this._messagesWithId[key].payload
@@ -61,7 +62,7 @@ class MessageValidator {
     if (method === 'validateByMessageId') {
       const [major, minor] = this.schema.asyncapi.split('.')
       if (parseInt(major) < 2 || (parseInt(major) === 2 && parseInt(minor) < 4)) {
-        throw new ValidationError(`AsyncAPI schema version should be >= 2.4.0. Your version is "${this.schema.asyncapi}"`)
+        throw new ValidationError(`AsyncAPI schema version should be >= 2.4.0 and <3.0.0 . Your version is "${this.schema.asyncapi}"`)
       }
 
       if (!this._messagesWithId[key]) {
@@ -72,7 +73,7 @@ class MessageValidator {
         throw new ValidationError('"msgIdentifier" is required')
       }
 
-      if (!operation || !(operation === 'publish' || operation === 'subscribe')) {
+      if (!operation || !(operation === 'publish' || operation === 'subscribe' || operation === 'send' || operation === 'receive')) {
         throw new ValidationError(`operation "${operation}" is not valid`)
       }
 
