@@ -1,7 +1,5 @@
-const asyncapiParser = require('@asyncapi/parser')
-const openapiSchemaParser = require('@asyncapi/openapi-schema-parser')
-const {promisify} = require('util')
-const readFile = promisify(require('fs').readFile)
+const {Parser: AsyncapiParser, fromURL, fromFile} = require('@asyncapi/parser')
+const {OpenAPISchemaParser} = require('@asyncapi/openapi-schema-parser')
 const ValidationError = require('./ValidationError')
 
 class Parser {
@@ -11,36 +9,46 @@ class Parser {
    * @returns {Promise} ref resolved schema object
    */
   async parse(source, options) {
-    const defaultConfig = options && options.path ? {path: options.path} : {}
+    const defaultConfig = options && options.path ? {source: options.path} : {}
+    const parser = new AsyncapiParser()
+    let document, diagnostics
     try {
-      asyncapiParser.registerSchemaParser(openapiSchemaParser)
+      parser.registerSchemaParser(OpenAPISchemaParser())
       if (source instanceof Object) {
         // Source could be an object (instead of JSON / YAML string.)
-        return await asyncapiParser.parse(source)
+        const result = await parser.parse(source)
+        document = result.document
+        diagnostics = result.diagnostics
+      } else if (source.indexOf('https://') === 0 || source.indexOf('http://') === 0) {
+        const result = await fromURL(parser, source).parse(defaultConfig)
+        document = result.document
+        diagnostics = result.diagnostics
+      } else {
+        const result = await fromFile(parser, source).parse(defaultConfig)
+        document = result.document
+        diagnostics = result.diagnostics
       }
-      if (source.indexOf('https://') === 0 || source.indexOf('http://') === 0) {
-        return await asyncapiParser.parseFromUrl(source)
+      if (diagnostics && diagnostics.length) {
+        const errorMessages = this._formatError(diagnostics)
+        if (errorMessages) throw new ValidationError(errorMessages, undefined, diagnostics)
       }
-      const file = await readFile(source, 'utf8')
-      return await asyncapiParser.parse(file, defaultConfig)
+      return document
     } catch (err) {
-      throw new ValidationError(this._formatError(err), undefined, err.validationErrors)
+      if (err instanceof ValidationError) throw err
+      throw new ValidationError(err.message, undefined, err)
     }
   }
 
-  /**
-   * @param {{ title: any; message: any; detail: any; validationErrors: any[]; }} err
-   */
-  _formatError(err) {
-    const title = err.title || err.message
-    let details = 'Error Details: '
-    details += err.detail ? err.detail : ''
-    if (err.validationErrors && err.validationErrors.length) {
-      err.validationErrors.forEach(element => {
-        details += element.title ? element.title : ''
-      })
-    }
-    return `${title} ${details}`
+  _formatError(diagnostics) {
+    let messages = ''
+
+    diagnostics.forEach(error => {
+      if (error.severity === 0) {
+        messages += error.message ? `${error.message} ` : ''
+      }
+    })
+
+    return messages === '' ? null : messages
   }
 }
 

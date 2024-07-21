@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 5.0.0 *(2024-07-21)*
+----------------------------
+### Breaking:
+* Errors messages format for initial check on AsyncApi document has been updated.
+  * _Note: No change in errors thrown from `validate()` method._
+* Deprecate `validateByMessageId()` method as `messageId` was removed in AsyncApi v3.0.0. More details here [asyncapi/spec/issues/978](https://github.com/asyncapi/spec/issues/978)
+
+### New / Improvements:
+* Support AsyncAPI schema v3.0.0
+* Start using @asyncapi/parser v3
+
 Version 4.0.0 *(2022-05-22)*
 ----------------------------
 ### Breaking:

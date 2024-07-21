@@ -12,31 +12,30 @@ describe('AsyncApiValidator', () => {
 
     it('should throw error if unable to parse file', async () => {
       const validator = AsyncApiValidator.fromSource(mocks.htmlFile)
-      await expect(validator).rejects.toThrowError('The provided YAML is not valid.')
+      await expect(validator).rejects.toThrowError(/Error thrown during AsyncAPI document parsing/)
     })
 
     it('should throw error if schema body is broken', async () => {
       const validator = AsyncApiValidator.fromSource('./test/schemas/broken.yml')
-      await expect(validator).rejects.toThrowError('There were errors validating the AsyncAPI document.')
+      await expect(validator).rejects.toThrowError(/Object must have required property "channels"/)
     })
 
     it('should throw error if schema is not valid with asyncapi', async () => {
       try {
         await AsyncApiValidator.fromSource('./test/schemas/invalid.yml')
       } catch (e) {
-        expect(e.message).toBe('There were errors validating the AsyncAPI document. Error Details: / should NOT have additional properties')
-        expect(e.errors).toStrictEqual([{
-          location: {
-            endColumn: 9,
-            endLine: 15,
-            endOffset: 348,
-            jsonPointer: '/channel',
-            startColumn: 1,
-            startLine: 15,
-            startOffset: 340
-          },
-          title: '/ should NOT have additional properties'
-        }])
+        expect(e.message).toBe('Property "channel" is not expected to be here ')
+        expect(e.errors).toContainEqual({
+          code: 'asyncapi-document-resolved',
+          message: 'Property "channel" is not expected to be here',
+          path: ['channel'],
+          severity: 0,
+          source: 'test/schemas/invalid.yml',
+          range: {
+            start: {line: 17, character: 13},
+            end: {line: 17, character: 17}
+          }
+        })
       }
     })
 

@@ -4,7 +4,7 @@ declare module 'asyncapi-validator' {
       key: string,
       payload: unknown,
       channel: string,
-      operation: 'publish' | 'subscribe',
+      operation: 'publish' | 'subscribe' | 'send' | 'receive',
     ) => boolean;
 
     validateByMessageId: (

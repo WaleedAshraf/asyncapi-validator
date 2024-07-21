@@ -38,6 +38,7 @@ class MessageValidator {
     return true
   }
 
+  // deprecated
   validateByMessageId(key, payload) {
     this._validateArgs(key, null, null, 'validateByMessageId')
     const payloadSchema = this._messagesWithId[key].payload
@@ -53,15 +54,15 @@ class MessageValidator {
 
   /**
    * @param {string} key
-   * @param {string | number} channel
-   * @param {string} operation
-   * @param {string} method
+   * @param {string | number | null} channel
+   * @param {string | null} operation
+   * @param {string | null} method
    */
   _validateArgs(key, channel, operation, method = null) {
     if (method === 'validateByMessageId') {
       const [major, minor] = this.schema.asyncapi.split('.')
       if (parseInt(major) < 2 || (parseInt(major) === 2 && parseInt(minor) < 4)) {
-        throw new ValidationError(`AsyncAPI schema version should be >= 2.4.0. Your version is "${this.schema.asyncapi}"`)
+        throw new ValidationError(`AsyncAPI schema version should be >= 2.4.0 and <3.0.0 . Your version is "${this.schema.asyncapi}"`)
       }
 
       if (!this._messagesWithId[key]) {
@@ -72,15 +73,15 @@ class MessageValidator {
         throw new ValidationError('"msgIdentifier" is required')
       }
 
-      if (!operation || !(operation === 'publish' || operation === 'subscribe')) {
+      if (!operation || !(operation === 'publish' || operation === 'subscribe' || operation === 'send' || operation === 'receive')) {
         throw new ValidationError(`operation "${operation}" is not valid`)
       }
 
-      if (!this._channels[channel]) {
+      if (channel !== null && !this._channels[channel]) {
         throw new ValidationError(`channel "${channel}" not found`)
       }
 
-      if (!this._channels[channel][operation][key]) {
+      if (channel !== null && !this._channels[channel][operation][key]) {
         throw new ValidationError(`message with key "${key}" on channel "${channel}" and operation "${operation}" not found`)
       }
     }

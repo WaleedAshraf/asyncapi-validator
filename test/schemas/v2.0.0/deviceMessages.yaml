@@ -26,13 +26,14 @@ components:
       name: DeviceInstallationPublished
       title: DeviceInstallationPublished
       summary: Device Installation Published
+      schemaFormat: 'application/schema+yaml;version=draft-07'
       payload:
         $ref: 'DeviceInstallationPublished.yaml#/components/schemas/DeviceInstallationPublished'
     DeviceInstallationResponsePublished:
       name: DeviceInstallationResponsePublished
       title: DeviceInstallationResponsePublished
       summary: Device Installation Response Published
-      schemaFormat: 'application/vnd.oai.openapi;version=3.0.0'
+      schemaFormat: 'application/schema+yaml;version=draft-07'
       payload:
         $ref: '#/components/schemas/DeviceInstallationResponsePublished'
 

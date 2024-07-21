@@ -28,5 +28,7 @@ jobs:
         npm run lint
         npm test
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v4.2.0
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
