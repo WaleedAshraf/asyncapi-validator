@@ -24,13 +24,13 @@ function ValidatorFactory() {
  */
 const constructsChannels = (schema, msgIdentifier = '') => {
   const channels = {}
-  const messagesWithOperations = {}
+  const channelsWithOperations = {}
   let messagesWithId = {}
 
   if (schema.operations) {
     Object.keys(schema.operations).forEach(operation => {
       const channel = schema.operations[operation].channel['x-parser-unique-object-id']
-      messagesWithOperations[channel] = messagesWithOperations[channel] ? messagesWithOperations[channel].push(operation) : [operation]
+      channelsWithOperations[channel] = channelsWithOperations[channel] ? channelsWithOperations[channel].concat(operation) : [operation]
     })
   }
 
@@ -52,8 +52,8 @@ const constructsChannels = (schema, msgIdentifier = '') => {
     })
 
     // For AsyncAPI 3.x.x
-    if (messagesWithOperations[c] && messagesWithOperations[c].length) {
-      messagesWithOperations[c].forEach(operation => {
+    if (channelsWithOperations[c] && channelsWithOperations[c].length) {
+      channelsWithOperations[c].forEach(operation => {
         const {action, messages} = getMessagesByOperations(schema.operations, operation, msgIdentifier)
         channels[c] = {
           ...channels[c],
