@@ -68,6 +68,8 @@ channels:
     messages:
       turnOff:
         $ref: '#/components/messages/turnOnOff'
+      turnOn:
+        $ref: '#/components/messages/turnOnOff'
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
@@ -94,12 +96,11 @@ operations:
   turnOn:
     action: send
     channel:
-      $ref: '#/channels/lightTurnOn'
+      $ref: '#/channels/lightTurnOff'
     traits:
       - $ref: '#/components/operationTraits/kafka'
     messages:
-      - $ref: '#/channels/lightTurnOn/messages/turnOn'
-      - $ref: '#/channels/lightTurnOn/messages/turnOff'
+      - $ref: '#/channels/lightTurnOff/messages/turnOn'
   turnOff:
     action: send
     channel:

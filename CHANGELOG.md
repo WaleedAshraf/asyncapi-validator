@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 5.0.1 *(2024-08-22)*
+----------------------------
+* Fix issue when multiple operations use same channel.
+
 Version 5.0.0 *(2024-07-21)*
 ----------------------------
 ### Breaking:

@@ -29,7 +29,7 @@ describe('deviceMessages', () => {
     expect(validate).toThrowError(new Error('data must have required property \'lumens\''))
   })
 
-  it('should not throw error with validate()', () => {
+  it('should validate lightMeasured', () => {
     const validate = validator.validate('lightMeasured', {
       lumens: 0,
       sentAt: '2019-08-24T14:15:22Z'
