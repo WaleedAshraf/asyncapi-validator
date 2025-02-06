@@ -12,7 +12,7 @@ describe('AsyncApiValidator', () => {
 
     it('should throw error if unable to parse file', async () => {
       const validator = AsyncApiValidator.fromSource(mocks.htmlFile)
-      await expect(validator).rejects.toThrowError(/Error thrown during AsyncAPI document parsing/)
+      await expect(validator).rejects.toThrowError(/This is not an AsyncAPI document./)
     })
 
     it('should throw error if schema body is broken', async () => {
@@ -32,8 +32,8 @@ describe('AsyncApiValidator', () => {
           severity: 0,
           source: 'test/schemas/invalid.yml',
           range: {
-            start: {line: 17, character: 13},
-            end: {line: 17, character: 17}
+            start: {line: 14, character: 8},
+            end: {line: 14, character: 8}
           }
         })
       }
