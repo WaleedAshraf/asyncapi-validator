@@ -81,3 +81,4 @@ typings/
 # development files
 dev/
 dist/
+.DS_Store
