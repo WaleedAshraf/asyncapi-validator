@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 5.1.0 *(2025-02-11)*
+----------------------------
+* Bump @asyncapi/parser version
+
 Version 5.0.1 *(2024-08-22)*
 ----------------------------
 * Fix issue when multiple operations use same channel.
