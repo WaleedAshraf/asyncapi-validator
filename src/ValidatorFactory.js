@@ -63,18 +63,28 @@ const constructsChannels = (schema, msgIdentifier = '') => {
   return {channels, messagesWithId}
 }
 
+/**
+ * @param { any } channel
+ * @param {string} operation - The operation for which to create a validator.
+ *                             - 'publish' for publishing messages
+ *                             - 'subscribe' for subscribing to topics
+ * @param {string} msgIdentifier
+ * @returns
+ */
 const getMessagesForOperation = (channel, operation, msgIdentifier) => {
   const msgsForOp = {}
   const msgsForId = {}
   if (channel[operation]) {
-    const messages = Array.isArray(channel[operation].message.oneOf)
-      ? channel[operation].message.oneOf
-      : [channel[operation].message]
-
-    messages.forEach(m => {
-      if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
-      if (m[messageId]) msgsForId[m[messageId]] = m
-    })
+    if (channel[operation].message.oneOf) {
+      channel[operation].message.oneOf.forEach((m) => {
+        if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
+        if (m[messageId]) msgsForId[m[messageId]] = m
+      })
+    } else {
+      const tempMsg = channel[operation].message
+      if (tempMsg[msgIdentifier]) msgsForOp[tempMsg[msgIdentifier]] = tempMsg
+      if (tempMsg[messageId]) msgsForId[tempMsg[messageId]] = tempMsg
+    }
   }
   return {msgsForOp, msgsForId}
 }
