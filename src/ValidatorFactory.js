@@ -24,13 +24,22 @@ function ValidatorFactory() {
  */
 const constructsChannels = (schema, msgIdentifier = '') => {
   const channels = {}
-  const channelsWithOperations = {}
   let messagesWithId = {}
 
+  // For AsyncAPI 3.x.x
   if (schema.operations) {
-    Object.keys(schema.operations).forEach(operation => {
-      const channel = schema.operations[operation].channel['x-parser-unique-object-id']
-      channelsWithOperations[channel] = channelsWithOperations[channel] ? channelsWithOperations[channel].concat(operation) : [operation]
+    Object.values(schema.operations).forEach(operation => {
+      const channel = operation.channel['x-parser-unique-object-id']
+      const action = operation.action
+
+      const messages = getMessagesByMsgIdentifier(operation.messages, msgIdentifier)
+      channels[channel] = {...channels[channel], [action]: messages}
+
+      if (operation.reply && operation.reply.channel) {
+        const replyChannel = operation.reply.channel['x-parser-unique-object-id']
+        const replyMessages = getMessagesByMsgIdentifier(operation.reply.messages, msgIdentifier)
+        channels[replyChannel] = {...channels[replyChannel], [action]: replyMessages}
+      }
     })
   }
 
@@ -50,55 +59,30 @@ const constructsChannels = (schema, msgIdentifier = '') => {
         ...msgsForId
       }
     })
-
-    // For AsyncAPI 3.x.x
-    if (channelsWithOperations[c] && channelsWithOperations[c].length) {
-      channelsWithOperations[c].forEach(operation => {
-        const {action, messages} = getMessagesByOperations(schema.operations, operation, msgIdentifier)
-        channels[c] = {
-          ...channels[c],
-          [action]: messages
-        }
-      })
-    }
   })
   return {channels, messagesWithId}
 }
 
-/**
- * @param { any } channel
- * @param {string} operation - The operation for which to create a validator.
- *                             - 'publish' for publishing messages
- *                             - 'subscribe' for subscribing to topics
- * @param {string} msgIdentifier
- * @returns
- */
 const getMessagesForOperation = (channel, operation, msgIdentifier) => {
   const msgsForOp = {}
   const msgsForId = {}
   if (channel[operation]) {
-    if (channel[operation].message.oneOf) {
-      channel[operation].message.oneOf.forEach((m) => {
-        if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
-        if (m[messageId]) msgsForId[m[messageId]] = m
-      })
-    } else {
-      const tempMsg = channel[operation].message
-      if (tempMsg[msgIdentifier]) msgsForOp[tempMsg[msgIdentifier]] = tempMsg
-      if (tempMsg[messageId]) msgsForId[tempMsg[messageId]] = tempMsg
-    }
+    const messages = Array.isArray(channel[operation].message.oneOf)
+      ? channel[operation].message.oneOf
+      : [channel[operation].message]
+
+    messages.forEach(m => {
+      if (m[msgIdentifier]) msgsForOp[m[msgIdentifier]] = m
+      if (m[messageId]) msgsForId[m[messageId]] = m
+    })
   }
   return {msgsForOp, msgsForId}
 }
 
-const getMessagesByOperations = (operations, operation, msgIdentifier) => {
-  const messages = {}
-  const action = operations[operation].action
-  operations[operation].messages.forEach(message => {
-    messages[message[msgIdentifier]] = message
-  })
-
-  return {action, messages}
+const getMessagesByMsgIdentifier = (messages, msgIdentifier) => {
+  return messages.reduce((messages, message) =>
+    message[msgIdentifier] ? {...messages, [message[msgIdentifier]]: message} : messages,
+  {})
 }
 
 module.exports = new ValidatorFactory()
