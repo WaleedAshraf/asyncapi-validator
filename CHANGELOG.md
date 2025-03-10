@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 5.1.1 *(2025-03-11)*
+----------------------------
+* Add support for Reply Operation Object (by @viktorgt)
+
 Version 5.1.0 *(2025-02-11)*
 ----------------------------
 * Bump @asyncapi/parser version
